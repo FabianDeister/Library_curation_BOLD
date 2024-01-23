@@ -1,1 +1,1 @@
-# Library_curation_BOLD
+# Library curation BOLD
