@@ -2,10 +2,9 @@
 use strict;
 use warnings;
 
-open(DAT,"<../../resources/example_filtered_informations.csv");
+open(DAT,'<','../../resources/example_filtered_informations.csv');
 
-while(<DAT>)
-	{
+while(<DAT>) {
 		my$line=$_;
 		my@array=split(/	/,$line);
 
@@ -23,8 +22,7 @@ while(<DAT>)
 		my$county=$array[11];
 		my$BIN=$array[12];
 		next unless $seqlenght =~/^\d+/;
-		if($seqlenght>500)
-			{
+		if($seqlenght>500) {
 				print "$seqlenght\n" unless $seqlenght=~/\d+/;
 				$count++;
 			}	
