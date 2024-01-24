@@ -12,22 +12,19 @@ my%true; # hash to assign the valid name to synonyms
 # This script extracts data from BOLD snapshot datasets 
 # Usage: >read_snapshot_data.pl -f <BOLD snapshot file>
 #-------------------------------------------
-GetOptions # get the parameters from the commandline
-	(
+GetOptions 	(
 	'file=s' => \$file, # define parameter handle 
 	) 
 	or die "Usage: $0 -f filename\n"; # report an input arror due to wrong usage
 #-------------------------------------------
 # read species names and synonyms from file
-open(DAT,"all_specs_and_syn.csv");
+open(DAT,'<','all_specs_and_syn.csv');
 print "\ncollect species names\n";
-while(<DAT>) # go through the lines of all_specs_and_syn.csv
-	{
+while(<DAT>){
 		my$line=$_; # define the variable $line for the current line 
 		chomp $line; # remove line ending 
 		my@names=split(/;/,$line); # create an array with all the names and synonyms
-		foreach(@names) # read every name in a loop 
-			{
+		foreach(@names) {
 				my$spec=$_; # set the name as value for the variable $spec
 				chomp$spec; # remove possible line endings
 				$true{$spec}=$names[0]; # set first name in the array as valid name for all following names in the array
@@ -38,15 +35,13 @@ close DAT; # reset the filehandle
 open(DAT,'<',"$file"); # open BOLD spanshot *.tsv file and define the filehandle DAT
 print "read BOLD data\n"; # show that the script has reached the second part of the process
 unlink "filtered_informations.csv" if -e "filtered_informations.csv"; # delete the output file if it already exists 
-open (OUT,">>filtered_informations.csv"); # open the output file
+open (OUT,'>>','filtered_informations.csv'); # open the output file
 print OUT "sampleid	species	real_species	ident_rank	voucher_type	seqlength	ambiguities	museum_id	institut	identifier	country	BIN\n"; # print output header in the output file
 my$count=0; # set the value of $count to 0
 my$count_samples=0;
 my$line_num=0;
-while(<DAT>) # read 
-	{
-		if($line_num==0)
-			{
+while(<DAT>) {
+		if($line_num==0) {
 				$line_num=1;
 				next;
 			}
@@ -56,8 +51,7 @@ while(<DAT>) # read
 		my@data=read_bold_public($line); # using the subroutine read_bold_public on the current data 
 		unless(defined $europ{$data[1]}){next} # skip line if the species is not present in the all_specs_and_syn.csv file
 		my$progress=0; # setting the value for $progress to 0 
-		foreach(@data) # go through each part of the array created by the subroutine
-			{
+		foreach(@data) {
 				my$val=$_; # current value (subroutine output)
 				chomp$val if defined $val; # remove line ending if $val is defined
 				print  OUT "$val" if defined $val; # print data from subroutine output array 
@@ -77,8 +71,7 @@ print "species:	$count\n"; # print out number of species (includes only valid sp
 print "samples:	$count_samples\n"; # print out number of samples in the filtered data
 #-------------------------------------------
 #subroutine that codes all the wanted data in the BOLD snapshot dataset
-sub read_bold_public 
-	{
+sub read_bold_public {
 		my$line=$_[0];
 
 		my@code=split(/\t/,$line); # converting the table contents into an array
@@ -106,14 +99,12 @@ sub read_bold_public
 		chomp $nucl; # remove possible lineendings
 		my@nucl=split(//,$nucl);
 		AGAIN:
-		if($nucl[0]=~/^[^AGTC]$/) # check if the first symbol in the sequence is A,G,T or C
-			{
+		if($nucl[0]=~/^[^AGTC]$/) {
 				shift @nucl; # remove first element in the list
 				$nucl=join('',@nucl); # sequence string is equal to modified array		
 				goto AGAIN # go back to check last array element
 			}
-		if($nucl[-1]=~/^[^AGTC]$/) # check if the last symbol in the sequence is A,G,T or C
-			{	
+		if($nucl[-1]=~/^[^AGTC]$/) {	
 				pop @nucl; # remove last element in array
 				$nucl=join('',@nucl); # redefine sequence string as joined array
 				goto AGAIN # go back to check again
