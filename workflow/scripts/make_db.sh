@@ -2,7 +2,7 @@ BOLD_TSV=../../resources/BOLD_Public.19-Jan-2024.tsv
 DB_FILE=../../results/bold.db
 SCHEMA=./schema.sql
 INDEXES=./indexes.sql
-LIBS=../lib
+LIBS=../../lib
 
 # Creates the empty database, reads BCDM TSV
 # and dumps it into the database
