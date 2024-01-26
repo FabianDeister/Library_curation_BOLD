@@ -25,5 +25,6 @@ CREATE INDEX IF NOT EXISTS "targetlist_idx" on targets ("targetlist")
 CREATE INDEX IF NOT EXISTS "synonym_name_idx" on synonyms ("name");
 
 -- indexes on the taxa table
-CREATE INDEX IF NOT EXISTS "level_idx" on taxa ("levels")
-CREATE INDEX IF NOT EXISTS "taxa_name_idx" on taxa ("name")
+CREATE INDEX IF NOT EXISTS "level_idx" on taxa ("levels");
+CREATE INDEX IF NOT EXISTS "taxa_name_idx" on taxa ("name");
+CREATE INDEX IF NOT EXISTS "kingdom_idx" on taxa ("kingdom");
