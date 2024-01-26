@@ -13,3 +13,4 @@ CREATE INDEX "species_idx" ON bold ("species");
 CREATE INDEX "subspecies_idx" ON bold ("subspecies");
 CREATE INDEX "gb_acs_idx" ON bold ("gb_acs");
 CREATE INDEX "marker_code_idx" ON bold ("marker_code");
+CREATE INDEX "voucher_type_idx" ON bold ("voucher_type");
