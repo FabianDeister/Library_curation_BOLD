@@ -107,5 +107,6 @@ CREATE TABLE IF NOT EXISTS "taxa" (
     "parent_taxonid" INTEGER, -- self-joining foreign key
     "level" TEXT NOT NULL, -- index, e.g. 'species'
     "name" TEXT NOT NULL, -- index, e.g. 'Homo sapiens'
+    "kingdom" TEXT NOT NULL, -- index, e.g. 'Animalia', for homonyms
     FOREIGN KEY(parent_taxonid) REFERENCES taxa(taxonid)
 );
