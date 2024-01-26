@@ -22,4 +22,20 @@ a DOI and will help generate [RO-crate](https://www.researchobject.org/ro-crate/
 documents, which means the entire tool chain is FAIR compliant according
 to the current state of the art.
 
+## Install
+
+The code in this repo depends on various tools. These are managed using
+the `mamba` program (a drop-in replacement of `conda`). The following
+sets up an environment in which the needed tools are installed:
+
+```{shell}
+$ mamba env create -f environment.yml
+```
+
+Once set up, this is activated like so:
+
+```{shell}
+$ mamba activate bioscan-curation
+```
+
  
