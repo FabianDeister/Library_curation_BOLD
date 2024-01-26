@@ -62,7 +62,8 @@ CREATE TABLE IF NOT EXISTS "bold"(
     "sequence_run_site" TEXT,
     "processid_minted_date" TEXT,
     "sequence_upload_date" TEXT,
-    "identification_rank" TEXT
+    "identification_rank" TEXT,
+    FOREIGN KEY(taxonid) REFERENCES taxa(taxonid)
 );
 
 -- the canonical names of the target list. For
@@ -81,7 +82,8 @@ CREATE TABLE IF NOT EXISTS "targets" (
 CREATE TABLE IF NOT EXISTS "synonyms" (
     "synonymid" INTEGER PRIMARY KEY, -- primary key
     "name" TEXT NOT NULL, -- index, any alternate name
-    "targetid" INTEGER NOT NULL -- foreign key to targets.targetid
+    "targetid" INTEGER NOT NULL, -- foreign key to targets.targetid
+    FOREIGN KEY(targetid) REFERENCES targets(targetid)
 );
 
 -- this is an intersection table that manages the
@@ -89,8 +91,10 @@ CREATE TABLE IF NOT EXISTS "synonyms" (
 -- on the target list and normalized bold taxa
 CREATE TABLE IF NOT EXISTS "bold_targets" (
     "bold_target_id" INTEGER PRIMARY KEY, -- primary key
-    "targetid" INTEGER NOT NULL, -- foreign key to targets.targetid
-    "taxonid" INTEGER NOT NULL -- foreign key to taxa.taxonid
+    "targetid" INTEGER, -- foreign key to targets.targetid
+    "taxonid" INTEGER, -- foreign key to taxa.taxonid
+    FOREIGN KEY(taxonid) REFERENCES taxa(taxonid),
+    FOREIGN KEY(targetid) REFERENCES targets(targetid)
 );
 
 -- this table normalizes the taxonomy, so that every taxon
@@ -102,5 +106,6 @@ CREATE TABLE IF NOT EXISTS "taxa" (
     "taxonid" INTEGER PRIMARY KEY, -- primary key
     "parent_taxonid" INTEGER, -- self-joining foreign key
     "level" TEXT NOT NULL, -- index, e.g. 'species'
-    "name" TEXT NOT NULL -- index, e.g. 'Homo sapiens'
+    "name" TEXT NOT NULL, -- index, e.g. 'Homo sapiens'
+    FOREIGN KEY(parent_taxonid) REFERENCES taxa(taxonid)
 );
