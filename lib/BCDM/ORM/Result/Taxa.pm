@@ -32,6 +32,7 @@ __PACKAGE__->table("taxa");
 =head2 parent_taxonid
 
   data_type: 'integer'
+  is_foreign_key: 1
   is_nullable: 1
 
 =head2 level
@@ -44,16 +45,23 @@ __PACKAGE__->table("taxa");
   data_type: 'text'
   is_nullable: 0
 
+=head2 kingdom
+
+  data_type: 'text'
+  is_nullable: 0
+
 =cut
 
 __PACKAGE__->add_columns(
   "taxonid",
   { data_type => "integer", is_auto_increment => 1, is_nullable => 0 },
   "parent_taxonid",
-  { data_type => "integer", is_nullable => 1 },
+  { data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
   "level",
   { data_type => "text", is_nullable => 0 },
   "name",
+  { data_type => "text", is_nullable => 0 },
+  "kingdom",
   { data_type => "text", is_nullable => 0 },
 );
 
@@ -69,9 +77,76 @@ __PACKAGE__->add_columns(
 
 __PACKAGE__->set_primary_key("taxonid");
 
+=head1 RELATIONS
 
-# Created by DBIx::Class::Schema::Loader v0.07049 @ 2024-01-26 14:54:14
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:n3vrrAMaOCkVJwo479N3FA
+=head2 bold_targets
+
+Type: has_many
+
+Related object: L<BCDM::ORM::Result::BoldTarget>
+
+=cut
+
+__PACKAGE__->has_many(
+  "bold_targets",
+  "BCDM::ORM::Result::BoldTarget",
+  { "foreign.taxonid" => "self.taxonid" },
+  { cascade_copy => 0, cascade_delete => 0 },
+);
+
+=head2 bolds
+
+Type: has_many
+
+Related object: L<BCDM::ORM::Result::Bold>
+
+=cut
+
+__PACKAGE__->has_many(
+  "bolds",
+  "BCDM::ORM::Result::Bold",
+  { "foreign.taxonid" => "self.taxonid" },
+  { cascade_copy => 0, cascade_delete => 0 },
+);
+
+=head2 parent_taxonid
+
+Type: belongs_to
+
+Related object: L<BCDM::ORM::Result::Taxa>
+
+=cut
+
+__PACKAGE__->belongs_to(
+  "parent_taxonid",
+  "BCDM::ORM::Result::Taxa",
+  { taxonid => "parent_taxonid" },
+  {
+    is_deferrable => 0,
+    join_type     => "LEFT",
+    on_delete     => "NO ACTION",
+    on_update     => "NO ACTION",
+  },
+);
+
+=head2 taxas
+
+Type: has_many
+
+Related object: L<BCDM::ORM::Result::Taxa>
+
+=cut
+
+__PACKAGE__->has_many(
+  "taxas",
+  "BCDM::ORM::Result::Taxa",
+  { "foreign.parent_taxonid" => "self.taxonid" },
+  { cascade_copy => 0, cascade_delete => 0 },
+);
+
+
+# Created by DBIx::Class::Schema::Loader v0.07049 @ 2024-01-26 17:05:50
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:lO6Wzzul6STQQphslbumzQ
 
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration

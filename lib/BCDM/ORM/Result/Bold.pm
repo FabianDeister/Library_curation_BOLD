@@ -29,6 +29,12 @@ __PACKAGE__->table("bold");
   is_auto_increment: 1
   is_nullable: 0
 
+=head2 taxonid
+
+  data_type: 'integer'
+  is_foreign_key: 1
+  is_nullable: 1
+
 =head2 processid
 
   data_type: 'text'
@@ -314,6 +320,8 @@ __PACKAGE__->table("bold");
 __PACKAGE__->add_columns(
   "recordid",
   { data_type => "integer", is_auto_increment => 1, is_nullable => 0 },
+  "taxonid",
+  { data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
   "processid",
   { data_type => "text", is_nullable => 1 },
   "sampleid",
@@ -440,9 +448,31 @@ __PACKAGE__->add_columns(
 
 __PACKAGE__->set_primary_key("recordid");
 
+=head1 RELATIONS
 
-# Created by DBIx::Class::Schema::Loader v0.07049 @ 2024-01-26 10:15:48
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:BkaE28G5oT5Ys3Odx69BBw
+=head2 taxonid
+
+Type: belongs_to
+
+Related object: L<BCDM::ORM::Result::Taxa>
+
+=cut
+
+__PACKAGE__->belongs_to(
+  "taxonid",
+  "BCDM::ORM::Result::Taxa",
+  { taxonid => "taxonid" },
+  {
+    is_deferrable => 0,
+    join_type     => "LEFT",
+    on_delete     => "NO ACTION",
+    on_update     => "NO ACTION",
+  },
+);
+
+
+# Created by DBIx::Class::Schema::Loader v0.07049 @ 2024-01-26 17:01:04
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:58jWpXmXvVqhmZVxtIxbFg
 
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration

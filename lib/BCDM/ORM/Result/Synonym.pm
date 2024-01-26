@@ -37,6 +37,7 @@ __PACKAGE__->table("synonyms");
 =head2 targetid
 
   data_type: 'integer'
+  is_foreign_key: 1
   is_nullable: 0
 
 =cut
@@ -47,7 +48,7 @@ __PACKAGE__->add_columns(
   "name",
   { data_type => "text", is_nullable => 0 },
   "targetid",
-  { data_type => "integer", is_nullable => 0 },
+  { data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
 );
 
 =head1 PRIMARY KEY
@@ -62,9 +63,26 @@ __PACKAGE__->add_columns(
 
 __PACKAGE__->set_primary_key("synonymid");
 
+=head1 RELATIONS
 
-# Created by DBIx::Class::Schema::Loader v0.07049 @ 2024-01-26 13:01:24
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:TZTWX+HKSkfMfIBKha4lEg
+=head2 targetid
+
+Type: belongs_to
+
+Related object: L<BCDM::ORM::Result::Target>
+
+=cut
+
+__PACKAGE__->belongs_to(
+  "targetid",
+  "BCDM::ORM::Result::Target",
+  { targetid => "targetid" },
+  { is_deferrable => 0, on_delete => "NO ACTION", on_update => "NO ACTION" },
+);
+
+
+# Created by DBIx::Class::Schema::Loader v0.07049 @ 2024-01-26 17:01:04
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:oy8F3FpBvroppP9jpsxkcQ
 
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration

@@ -62,9 +62,41 @@ __PACKAGE__->add_columns(
 
 __PACKAGE__->set_primary_key("targetid");
 
+=head1 RELATIONS
 
-# Created by DBIx::Class::Schema::Loader v0.07049 @ 2024-01-26 13:01:24
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:uqjV7edWFuho1fI0g9lm1w
+=head2 bold_targets
+
+Type: has_many
+
+Related object: L<BCDM::ORM::Result::BoldTarget>
+
+=cut
+
+__PACKAGE__->has_many(
+  "bold_targets",
+  "BCDM::ORM::Result::BoldTarget",
+  { "foreign.targetid" => "self.targetid" },
+  { cascade_copy => 0, cascade_delete => 0 },
+);
+
+=head2 synonyms
+
+Type: has_many
+
+Related object: L<BCDM::ORM::Result::Synonym>
+
+=cut
+
+__PACKAGE__->has_many(
+  "synonyms",
+  "BCDM::ORM::Result::Synonym",
+  { "foreign.targetid" => "self.targetid" },
+  { cascade_copy => 0, cascade_delete => 0 },
+);
+
+
+# Created by DBIx::Class::Schema::Loader v0.07049 @ 2024-01-26 17:01:04
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:+t1iZ1khUY5OVjAj/2GUzQ
 
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration
