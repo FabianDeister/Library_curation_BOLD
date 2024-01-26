@@ -73,6 +73,7 @@ while (my $record = $rs->next) {
 
     # Get the single taxon that has this level and name
     my $restrict = { level => $level, name => $record->$level, kingdom => $record->kingdom };
+    $log->debug(Dumper($restrict));
     my $taxon = $schema->resultset('Taxa')->find($restrict);
     $record->taxonid( $taxon->taxonid );
 }
@@ -93,6 +94,7 @@ sub recurse {
         level   => $level,
         kingdom => $kingdom,
     });
+    $taxon->insert;
     $log->debug("Instantiated taxon object $taxon");
 
     # Fetch distinct children, if there is a taxonomic level below this
@@ -106,6 +108,7 @@ sub recurse {
             next if $child eq 'None';
             $log->debug("Going to process child taxon $child");
             my $child_taxon = recurse($kingdom, @path, $child);
+            $log->debug("Done processing child clade, attaching $child to parent");
             $child_taxon->parent_taxonid($taxon->taxonid);
         }
     }
