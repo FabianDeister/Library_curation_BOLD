@@ -1,17 +1,29 @@
-CREATE INDEX "processid_idx" ON bold ("processid");
-CREATE INDEX "sampleid_idx" ON bold ("sampleid");
-CREATE INDEX "specimenid_idx" ON bold ("specimenid");
-CREATE INDEX "bin_uri_idx" ON bold ("bin_uri");
-CREATE INDEX "kingdom_idx" ON bold ("kingdom");
-CREATE INDEX "phylum_idx" ON bold ("phylum");
-CREATE INDEX "class_idx" ON bold ("class");
-CREATE INDEX "order_idx" ON bold ("order");
-CREATE INDEX "family_idx" ON bold ("family");
-CREATE INDEX "subfamily_idx" ON bold ("subfamily");
-CREATE INDEX "genus_idx" ON bold ("genus");
-CREATE INDEX "species_idx" ON bold ("species");
-CREATE INDEX "subspecies_idx" ON bold ("subspecies");
-CREATE INDEX "gb_acs_idx" ON bold ("gb_acs");
-CREATE INDEX "marker_code_idx" ON bold ("marker_code");
-CREATE INDEX "voucher_type_idx" ON bold ("voucher_type");
-CREATE INDEX "identification_method_idx" ON bold ("identification_method");
+-- indexes on the bold table. More might be needed.
+CREATE INDEX IF NOT EXISTS "processid_idx" ON bold ("processid");
+CREATE INDEX IF NOT EXISTS "sampleid_idx" ON bold ("sampleid");
+CREATE INDEX IF NOT EXISTS "specimenid_idx" ON bold ("specimenid");
+CREATE INDEX IF NOT EXISTS "bin_uri_idx" ON bold ("bin_uri");
+CREATE INDEX IF NOT EXISTS "kingdom_idx" ON bold ("kingdom");
+CREATE INDEX IF NOT EXISTS "phylum_idx" ON bold ("phylum");
+CREATE INDEX IF NOT EXISTS "class_idx" ON bold ("class");
+CREATE INDEX IF NOT EXISTS "order_idx" ON bold ("order");
+CREATE INDEX IF NOT EXISTS "family_idx" ON bold ("family");
+CREATE INDEX IF NOT EXISTS "subfamily_idx" ON bold ("subfamily");
+CREATE INDEX IF NOT EXISTS "genus_idx" ON bold ("genus");
+CREATE INDEX IF NOT EXISTS "species_idx" ON bold ("species");
+CREATE INDEX IF NOT EXISTS "subspecies_idx" ON bold ("subspecies");
+CREATE INDEX IF NOT EXISTS "gb_acs_idx" ON bold ("gb_acs");
+CREATE INDEX IF NOT EXISTS "marker_code_idx" ON bold ("marker_code");
+CREATE INDEX IF NOT EXISTS "voucher_type_idx" ON bold ("voucher_type");
+CREATE INDEX IF NOT EXISTS "identification_method_idx" ON bold ("identification_method");
+
+-- indexes on the targets table
+CREATE INDEX IF NOT EXISTS "target_name_idx" on targets ("name");
+CREATE INDEX IF NOT EXISTS "targetlist_idx" on targets ("targetlist")
+
+-- indexes on the synonyms table
+CREATE INDEX IF NOT EXISTS "synonym_name_idx" on synonyms ("name");
+
+-- indexes on the taxa table
+CREATE INDEX IF NOT EXISTS "level_idx" on taxa ("levels")
+CREATE INDEX IF NOT EXISTS "taxa_name_idx" on taxa ("name")
