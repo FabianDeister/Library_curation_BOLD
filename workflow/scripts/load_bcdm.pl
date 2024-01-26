@@ -30,7 +30,7 @@ Log::Log4perl->init(\<<"END");
 END
 
 # Instantiate logger
-my $log = Log::Log4perl->get_logger('load_database');
+my $log = Log::Log4perl->get_logger('load_bcdm');
 
 # Create the SQLite database - delete old
 unlink($db_file) if $overwrite;
