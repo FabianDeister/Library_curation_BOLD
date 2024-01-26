@@ -20,6 +20,7 @@ sqlite3 $DB_FILE < $INDEXES
 dbicdump -o dump_directory=$LIBS BCDM::ORM "dbi:SQLite:dbname=$DB_FILE"
 
 # Here comes a script that uses the ORM to populate the normalized taxonomy tree
+perl load_taxonomy.pl --db=$DB_FILE --log=INFO
 
 # Here comes a script that imports the target list, its synonyms, and mapping to taxonomy tree
 
