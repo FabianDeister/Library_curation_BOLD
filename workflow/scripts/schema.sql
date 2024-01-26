@@ -1,5 +1,12 @@
+-- this table contains the verbatim contents
+-- of a BOLD data dump in BCDM TSV format. The
+-- table is extended with a primary key (recordid)
+-- and a foreign key that links to the normalized
+-- taxa table.
+-- TODO figure out where to put curation criteria
 CREATE TABLE IF NOT EXISTS "bold"(
     "recordid" INTEGER PRIMARY KEY,
+    "taxonid" INTEGER, -- index, foreign key
     "processid" TEXT, -- index
     "sampleid" TEXT, -- index
     "specimenid" TEXT, -- index
@@ -56,16 +63,44 @@ CREATE TABLE IF NOT EXISTS "bold"(
     "processid_minted_date" TEXT,
     "sequence_upload_date" TEXT,
     "identification_rank" TEXT
-)
+);
 
+-- the canonical names of the target list. For
+-- extensibility there is a field for the name of the
+-- target list (e.g. 'BIOSCAN') so that multiple lists
+-- can live here, e.g. for different projects, taxonomic
+-- groups, geographic entities, etc.
 CREATE TABLE IF NOT EXISTS "targets" (
     "targetid" INTEGER PRIMARY KEY, -- primary key
-    "name" TEXT NOT NULL, -- index
-    "targetlist" TEXT NOT NULL -- index
-)
+    "name" TEXT NOT NULL, -- index, species name
+    "targetlist" TEXT NOT NULL -- index, e.g. 'BIOSCAN'
+);
 
+-- manages the one-to-many relationship between canonical
+-- names and taxonomic synonyms
 CREATE TABLE IF NOT EXISTS "synonyms" (
     "synonymid" INTEGER PRIMARY KEY, -- primary key
-    "name" TEXT NOT NULL, -- index
-    "targetid" INTEGER NOT NULL -- foreign key
-)
+    "name" TEXT NOT NULL, -- index, any alternate name
+    "targetid" INTEGER NOT NULL -- foreign key to targets.targetid
+);
+
+-- this is an intersection table that manages the
+-- many-to-many relationships between canonical species
+-- on the target list and normalized bold taxa
+CREATE TABLE IF NOT EXISTS "bold_targets" (
+    "bold_target_id" INTEGER PRIMARY KEY, -- primary key
+    "targetid" INTEGER NOT NULL, -- foreign key to targets.targetid
+    "taxonid" INTEGER NOT NULL -- foreign key to taxa.taxonid
+);
+
+-- this table normalizes the taxonomy, so that every taxon
+-- has a single record (i.e. according to DRY principles),
+-- which is referenced by the bold table and and the
+-- bold_targets table
+-- TODO figure out where to put curation criteria
+CREATE TABLE IF NOT EXISTS "taxa" (
+    "taxonid" INTEGER PRIMARY KEY, -- primary key
+    "parent_taxonid" INTEGER, -- self-joining foreign key
+    "level" TEXT NOT NULL, -- index, e.g. 'species'
+    "name" TEXT NOT NULL -- index, e.g. 'Homo sapiens'
+);
