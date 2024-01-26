@@ -28,3 +28,13 @@ CREATE INDEX IF NOT EXISTS "synonym_name_idx" on synonyms ("name");
 CREATE INDEX IF NOT EXISTS "level_idx" on taxa ("levels");
 CREATE INDEX IF NOT EXISTS "taxa_name_idx" on taxa ("name");
 CREATE INDEX IF NOT EXISTS "kingdom_idx" on taxa ("kingdom");
+
+-- progressive taxon hierarchy indexes
+CREATE INDEX IF NOT EXISTS "kp_idx" ON bold ("kingdom", "phylum");
+CREATE INDEX IF NOT EXISTS "kpc_idx" ON bold ("kingdom", "phylum", "class");
+CREATE INDEX IF NOT EXISTS "kpco_idx" ON bold ("kingdom", "phylum", "class", "order");
+CREATE INDEX IF NOT EXISTS "kpcof_idx" ON bold ("kingdom", "phylum", "class", "order", "family");
+CREATE INDEX IF NOT EXISTS "kpcofs_idx" ON bold ("kingdom", "phylum", "class", "order", "family", "subfamily");
+CREATE INDEX IF NOT EXISTS "kpcofsg_idx" ON bold ("kingdom", "phylum", "class", "order", "family", "subfamily", "genus");
+CREATE INDEX IF NOT EXISTS "kpcofsgs_idx" ON bold ("kingdom", "phylum", "class", "order", "family", "subfamily", "genus", "species");
+CREATE INDEX IF NOT EXISTS "kpcofsgss_idx" ON bold ("kingdom", "phylum", "class", "order", "family", "subfamily", "genus", "species", "subspecies");
