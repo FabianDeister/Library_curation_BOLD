@@ -1,4 +1,4 @@
-CREATE TABLE "bold"(
+CREATE TABLE IF NOT EXISTS "bold"(
     "recordid" INTEGER PRIMARY KEY,
     "processid" TEXT, -- index
     "sampleid" TEXT, -- index
@@ -56,4 +56,16 @@ CREATE TABLE "bold"(
     "processid_minted_date" TEXT,
     "sequence_upload_date" TEXT,
     "identification_rank" TEXT
+)
+
+CREATE TABLE IF NOT EXISTS "targets" (
+    "targetid" INTEGER PRIMARY KEY, -- primary key
+    "name" TEXT NOT NULL, -- index
+    "targetlist" TEXT NOT NULL -- index
+)
+
+CREATE TABLE IF NOT EXISTS "synonyms" (
+    "synonymid" INTEGER PRIMARY KEY, -- primary key
+    "name" TEXT NOT NULL, -- index
+    "targetid" INTEGER NOT NULL -- foreign key
 )
