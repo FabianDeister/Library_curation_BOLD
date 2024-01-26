@@ -1,2 +1,4 @@
 resources/BOLD_Public.*.tsv
 results/bold.db
+.idea
+.DS_Store
