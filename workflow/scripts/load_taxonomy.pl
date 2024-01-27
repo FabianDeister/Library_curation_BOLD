@@ -49,18 +49,18 @@ while (my $record = $rs->next) {
     $log->info('Processing record '.$record->recordid) unless $record->recordid % 1000;
 
     # Find lowest defined taxon name in BOLD record by going backward
-    my $max = 0;
-    LEVEL: for ( my $i = $#levels; $i >= 0; $i-- ) {
-        my $level = $levels[$i];
-        if ( $record->$level ne 'None' ) {
-            $max = $i;
-            last LEVEL;
-        }
-    }
+    my $max = get_lowest_defined_taxon($record);
 
     # Find lowest defined taxon object either from cache or DB
+    my $taxonid = get_taxonid($record, $max, $tree);
+
+    # Update the taxon id
+    $record->update({ 'taxonid' => $taxonid });
+}
+
+sub get_taxonid {
+    my ( $record, $max, $node ) = @_;
     my $taxonid = undef;
-    my $node = $tree; # go to the root of the cached tree
     my $kingdom = $record->kingdom;
     for my $i ( 0 .. $max ) {
         my $level = $levels[$i];
@@ -84,9 +84,17 @@ while (my $record = $rs->next) {
         # traverse down the tree
         $node = $node->{$name}->{children};
     }
+    return $taxonid;
+}
 
-    # Update the taxon id
-    $record->update({ 'taxonid' => $taxonid });
+sub get_lowest_defined_taxon {
+    my $record = shift;
+    for ( my $i = $#levels; $i >= 0; $i-- ) {
+        my $level = $levels[$i];
+        if ( $record->$level ne 'None' ) {
+            return $i;
+        }
+    }
 }
 
 sub get_node {
