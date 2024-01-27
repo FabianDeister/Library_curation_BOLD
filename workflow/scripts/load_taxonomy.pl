@@ -60,7 +60,7 @@ my $schema = BCDM::ORM->connect("dbi:SQLite:$db_file", "", "", { quote_char => '
 # Start iterating at the roots
 for my $kingdom ( @kingdoms ) {
     $log->info("Processing kingdom $kingdom");
-    #recurse(undef, $kingdom, $kingdom);
+    recurse(undef, $kingdom, $kingdom);
 }
 
 # Iterate over all BOLD records to link to the taxa table
@@ -77,7 +77,6 @@ while (my $record = $rs->next) {
     # If we don't have a $name, we'll have to brute force up the taxonomic ranks to find
     # the lowest level with a name.
     if ( $name eq 'None' ) {
-        $log->debug("Name at the identified rank $level is $name for record ".$record->recordid);
         ASCENDING_LEVELS: for ( my $i = $#levels; $i >= 0; $i-- ) {
             my $l = $levels[$i];
             if ( $record->$l ne 'None' ) {
@@ -85,20 +84,20 @@ while (my $record = $rs->next) {
                 last ASCENDING_LEVELS;
             }
         }
-        $log->debug("Using named level $level instead");
     }
 
     # Get the taxa that have this level and name
     my $restrict = { level => $level, name => $record->$level, kingdom => $record->kingdom };
-    $log->debug(Dumper($restrict));
     my $taxa = $schema->resultset('Taxa')->search($restrict);
 
-    # TODO Check why we are getting multiple hits
+    # This seems to never happen - nor should it (!)
     if ( $taxa->count > 1 ) {
         $log->warn('Multiple hits for '.Dumper($restrict).' record ID: '.$record->recordid);
     }
     else {
-        $record->taxonid($taxa->first->taxonid);
+        my $taxon = $taxa->first;
+        $log->debug("Updating ".$record->recordid." with taxonid ".$taxon->taxonid);
+        $record->update({ 'taxonid' => $taxon->taxonid });
     }
 }
 
