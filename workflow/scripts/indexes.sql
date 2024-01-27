@@ -31,7 +31,9 @@ CREATE INDEX IF NOT EXISTS "targetid_idx" on synonyms ("targetid");
 CREATE INDEX IF NOT EXISTS "level_idx" on taxa ("levels");
 CREATE INDEX IF NOT EXISTS "taxa_name_idx" on taxa ("name");
 CREATE INDEX IF NOT EXISTS "kingdom_idx" on taxa ("kingdom");
-CREATE INDEX IF NOT EXISTS "full_idx" on taxa ("kingdom","levels","name");
+CREATE INDEX IF NOT EXISTS "full_idx" on taxa ("kingdom","level","name");
+CREATE INDEX IF NOT EXISTS "total_idx" on taxa ("kingdom","level","name", "parent_taxonid");
+CREATE INDEX IF NOT EXISTS "parent_taxonid_idx" on taxa ("parent_taxonid");
 
 -- indexes on the bold_targets table
 CREATE INDEX IF NOT EXISTS "taxonid_idx" ON bold_targets ("taxonid_idx");

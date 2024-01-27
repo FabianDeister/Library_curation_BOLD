@@ -1,14 +1,8 @@
 use strict;
 use warnings;
 use BCDM::ORM;
-use Data::Dumper;
 use Getopt::Long;
 use Log::Log4perl qw(:easy);
-
-# Configure Data::Dumper for terse representation
-$Data::Dumper::Terse = 1;    # Avoids variable name being printed
-$Data::Dumper::Indent = 0;   # No indentation (single line output)
-$Data::Dumper::Useqq = 1;    # Use double quotes for string values
 
 # Levels in the BOLD taxonomy
 my @levels = qw[
@@ -21,16 +15,6 @@ my @levels = qw[
     genus
     species
     subspecies
-];
-
-# Kingdoms in the BOLD taxonomy
-my @kingdoms = qw[
-    Animalia
-    Bacteria
-    Fungi
-    Plantae
-    Protista
-    Unknown
 ];
 
 # Process command line arguments
@@ -57,84 +41,69 @@ my $log = Log::Log4perl->get_logger('load_taxonomy');
 $log->info("Going to connect to database $db_file");
 my $schema = BCDM::ORM->connect("dbi:SQLite:$db_file", "", "", { quote_char => '"' });
 
-# Start iterating at the roots
-for my $kingdom ( @kingdoms ) {
-    $log->info("Processing kingdom $kingdom");
-    recurse(undef, $kingdom, $kingdom);
-}
-
 # Iterate over all BOLD records to link to the taxa table
 $log->info("Going to link BOLD records to normalized taxa");
 my $rs = $schema->resultset('Bold')->search({});
+my $tree = {}; # this is a cache that is gradually filled up
 while (my $record = $rs->next) {
-    $log->info('Processing record '.$record->recordid) unless $record->recordid % 10_000;
+    $log->info('Processing record '.$record->recordid) unless $record->recordid % 1000;
 
-    # Lookup to what level this was identified, assume lowest level if NULL
-    my $level = $record->identification_rank || 'subspecies';
-    $level = 'subfamily' if $level eq 'tribe';
-    my $name = $record->$level; # In nice records this ought to work
-
-    # If we don't have a $name, we'll have to brute force up the taxonomic ranks to find
-    # the lowest level with a name.
-    if ( $name eq 'None' ) {
-        ASCENDING_LEVELS: for ( my $i = $#levels; $i >= 0; $i-- ) {
-            my $l = $levels[$i];
-            if ( $record->$l ne 'None' ) {
-                $level = $l;
-                last ASCENDING_LEVELS;
-            }
+    # Find lowest defined taxon name in BOLD record by going backward
+    my $max = 0;
+    LEVEL: for ( my $i = $#levels; $i >= 0; $i-- ) {
+        my $level = $levels[$i];
+        if ( $record->$level ne 'None' ) {
+            $max = $i;
+            last LEVEL;
         }
     }
 
-    # Get the taxa that have this level and name
-    my $restrict = { level => $level, name => $record->$level, kingdom => $record->kingdom };
-    my $taxa = $schema->resultset('Taxa')->search($restrict);
+    # Find lowest defined taxon object either from cache or DB
+    my $taxonid = undef;
+    my $node = $tree; # go to the root of the cached tree
+    my $kingdom = $record->kingdom;
+    for my $i ( 0 .. $max ) {
+        my $level = $levels[$i];
+        my $name = $record->$level;
 
-    # This seems to never happen - nor should it (!)
-    if ( $taxa->count > 1 ) {
-        $log->warn('Multiple hits for '.Dumper($restrict).' record ID: '.$record->recordid);
+        # already seen this taxonomic path in the tree
+        if ( $node->{$name} ) {
+            $taxonid = $node->{$name}->{object};
+        }
+
+        # not seen yet
+        else {
+
+            # create node
+            $taxonid = get_node($kingdom, $name, $level, $taxonid);
+
+            # extend tree
+            $node->{$name} = { children => {}, object => $taxonid };
+        }
+
+        # traverse down the tree
+        $node = $node->{$name}->{children};
+    }
+
+    # Update the taxon id
+    $record->update({ 'taxonid' => $taxonid });
+}
+
+sub get_node {
+    my ( $kingdom, $name, $level, $parent ) = @_;
+
+    # Compose search predicates
+    my $predicates = { 'kingdom' => $kingdom, 'name' => $name, 'level' => $level };
+    $predicates->{parent_taxonid} = $parent if defined $parent;
+
+    # Either an object or undef
+    if ( my $taxon = $schema->resultset('Taxa')->find($predicates) ) {
+        return $taxon;
     }
     else {
-        my $taxon = $taxa->first;
-        $log->debug("Updating ".$record->recordid." with taxonid ".$taxon->taxonid);
-        $record->update({ 'taxonid' => $taxon->taxonid });
+        $taxon = $schema->resultset('Taxa')->create($predicates);
+        $taxon->insert;
+        return $taxon->taxonid;
     }
 }
 
-# Recursive function that traverses the taxonomic levels and distinct taxa
-# at those levels, gradually populating the tree structure in a depth-first
-# traversal.
-sub recurse {
-    my ( $parent, $kingdom, @path ) = @_;
-    my %keys = map { $levels[$_] => $path[$_] } 0 .. $#path;
-    $log->debug(Dumper(\%keys));
-
-    # Instantiate current level => name
-    my $level = $levels[$#path];
-    my $name  = $path[-1];
-    my $taxon = $schema->resultset('Taxa')->create({
-        name           => $name,
-        level          => $level,
-        kingdom        => $kingdom,
-        parent_taxonid => $parent ? $parent->taxonid : undef,
-    });
-    $taxon->insert;
-    $log->debug("Instantiated taxon object $taxon");
-
-    # Fetch distinct children, if there is a taxonomic level below this
-    my $child_level = $levels[$#path + 1];
-    if ( defined $child_level ) {
-        my $restrict = { columns => [ $child_level ], distinct => 1 };
-        my @children = $schema->resultset('Bold')->search(\%keys, $restrict)->get_column($child_level)->all();
-
-        # Recurse further if there are children. Note that this also recurses
-        # through 'None' levels. Let's assume that this is fine...
-        for my $child (@children) {
-            $log->debug("Going to process child taxon $child");
-            recurse($taxon, $kingdom, @path, $child);
-        }
-    }
-
-    # Report progress
-    $log->info("Processed $level $name (" . $taxon->taxonid . ")") unless $taxon->taxonid % 10_000;
-}
