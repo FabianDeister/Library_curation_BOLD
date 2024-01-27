@@ -17,6 +17,7 @@ CREATE INDEX IF NOT EXISTS "marker_code_idx" ON bold ("marker_code");
 CREATE INDEX IF NOT EXISTS "voucher_type_idx" ON bold ("voucher_type");
 CREATE INDEX IF NOT EXISTS "identification_rank_idx" ON bold ("identification_rank");
 CREATE INDEX IF NOT EXISTS "identification_method_idx" ON bold ("identification_method");
+CREATE INDEX IF NOT EXISTS "taxonid_idx" ON bold ("taxonid");
 
 -- indexes on the targets table
 CREATE INDEX IF NOT EXISTS "target_name_idx" on targets ("name");
@@ -24,12 +25,17 @@ CREATE INDEX IF NOT EXISTS "targetlist_idx" on targets ("targetlist")
 
 -- indexes on the synonyms table
 CREATE INDEX IF NOT EXISTS "synonym_name_idx" on synonyms ("name");
+CREATE INDEX IF NOT EXISTS "targetid_idx" on synonyms ("targetid");
 
 -- indexes on the taxa table
 CREATE INDEX IF NOT EXISTS "level_idx" on taxa ("levels");
 CREATE INDEX IF NOT EXISTS "taxa_name_idx" on taxa ("name");
 CREATE INDEX IF NOT EXISTS "kingdom_idx" on taxa ("kingdom");
 CREATE INDEX IF NOT EXISTS "full_idx" on taxa ("kingdom","levels","name");
+
+-- indexes on the bold_targets table
+CREATE INDEX IF NOT EXISTS "taxonid_idx" ON bold_targets ("taxonid_idx");
+CREATE INDEX IF NOT EXISTS "targetid_idx" on bold_targets ("targetid");
 
 -- progressive taxon hierarchy indexes
 CREATE INDEX IF NOT EXISTS "kp_idx" ON bold ("kingdom", "phylum");
