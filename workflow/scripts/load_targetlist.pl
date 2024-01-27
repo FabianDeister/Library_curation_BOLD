@@ -1,6 +1,5 @@
 use strict;
 use warnings;
-use lib '../../lib';
 use BCDM::ORM;
 use Getopt::Long;
 use Log::Log4perl qw(:easy);
@@ -10,11 +9,13 @@ my $targetlist; # location of ;-separated target list
 my $db_file;    # where to create database file
 my $log_level = 'INFO'; # verbosity level for logger
 my $project = 'BGE-BIOSCAN'; # name of the project/target
+my $taxon_level = 'species'; # what level we're using
 GetOptions(
     'list=s'    => \$targetlist,
     'db=s'      => \$db_file,
     'log=s'     => \$log_level,
     'project=s' => \$project,
+    'taxon=s'   => \$taxon_level,
 );
 
 # Initialize Log::Log4perl
@@ -56,6 +57,7 @@ while(<$fh>) {
     }
 
     # TODO Matching against taxa table goes here
+    # XXX do we know what kingdom this is? What level?
 
     # Report progress
     $log->info("Processed record " . $target->id) unless $target->id % 1000;
