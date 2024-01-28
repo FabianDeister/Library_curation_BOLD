@@ -110,3 +110,28 @@ CREATE TABLE IF NOT EXISTS "taxa" (
     "kingdom" TEXT NOT NULL, -- index, e.g. 'Animalia', for homonyms
     FOREIGN KEY(parent_taxonid) REFERENCES taxa(taxonid)
 );
+
+-- this table lists the criteria for sequence/specimen
+-- quality. The table thus corresponds with the columns
+-- in table 1 of the draft document, here:
+-- https://docs.google.com/document/d/18m-7UnoJTG49TbvTsq_VncKMYZbYVbau98LE_q4rQvA/edit
+CREATE TABLE IF NOT EXISTS "criteria" (
+    "criterionid" INTEGER PRIMARY KEY, -- primary key
+    "name" TEXT NOT NULL, -- index, e.g. SPECIES_ID, TYPE_SPECIMEN, SEQ_LENGTH
+    "description" TEXT NOT NULL
+);
+
+-- this table intersects between the criteria and the bold
+-- records. Hence, every bold record has zero-to-many
+-- criteria which have been assessed and for which the
+-- record passes or fails. Passing and failing is indicated
+-- by a boolean flag in the "status" column.
+CREATE TABLE IF NOT EXISTS "bold_criteria" (
+    "bold_criteria_id" INTEGER PRIMARY KEY, -- primary key
+    "recordid" INTEGER NOT NULL, -- index, foreign key to bold table
+    "criterionid" INTEGER NOT NULL, -- index, foreign key to criteria
+    "status" INTEGER NOT NULL CHECK (status IN (0, 1)), -- boolean, whether the record qualifies for this criterion
+    "notes" TEXT, -- any further notes about the status, if available
+    FOREIGN KEY(recordid) REFERENCES bold(recordid),
+    FOREIGN KEY(criterionid) REFERENCES criteria(criterionid)
+);
