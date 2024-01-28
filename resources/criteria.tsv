@@ -2,7 +2,7 @@ criterionid	name	description
 1	SPECIES_ID	Specimen was identified to species rank
 2	TYPE_SPECIMEN	Specimen is a type specimen
 3	SEQ_QUALITY	Sequence is long, with few ambiguities
-4	PUBLIC_VOUCER	Specimen is vouchered in a public collection
+4	PUBLIC_VOUCHER	Specimen is vouchered in a public collection
 5	HAS_IMAGE	Specimen is photographed
 6	IDENTIFIER	Specimen was identified by a named person
 7	ID_METHOD	Specimen was identified by morphology
