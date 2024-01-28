@@ -48,3 +48,11 @@ CREATE INDEX IF NOT EXISTS "kpcofs_idx" ON bold ("kingdom", "phylum", "class", "
 CREATE INDEX IF NOT EXISTS "kpcofsg_idx" ON bold ("kingdom", "phylum", "class", "order", "family", "subfamily", "genus");
 CREATE INDEX IF NOT EXISTS "kpcofsgs_idx" ON bold ("kingdom", "phylum", "class", "order", "family", "subfamily", "genus", "species");
 CREATE INDEX IF NOT EXISTS "kpcofsgss_idx" ON bold ("kingdom", "phylum", "class", "order", "family", "subfamily", "genus", "species", "subspecies");
+
+-- indexes on criteria
+CREATE INDEX IF NOT EXISTS "name_idx" on criteria ("name");
+
+-- indexes on bold_criteria intersection
+CREATE INDEX IF NOT EXISTS "recordid_idx" on bold_criteria ("recordid");
+CREATE INDEX IF NOT EXISTS "criterionid_idx" on bold_criteria ("criterionid");
+CREATE INDEX IF NOT EXISTS "status_idx" on bold_criteria ("status");

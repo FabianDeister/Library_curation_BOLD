@@ -3,7 +3,6 @@
 -- table is extended with a primary key (recordid)
 -- and a foreign key that links to the normalized
 -- taxa table.
--- TODO figure out where to put curation criteria
 CREATE TABLE IF NOT EXISTS "bold"(
     "recordid" INTEGER PRIMARY KEY,
     "taxonid" INTEGER, -- index, foreign key
@@ -101,7 +100,6 @@ CREATE TABLE IF NOT EXISTS "bold_targets" (
 -- has a single record (i.e. according to DRY principles),
 -- which is referenced by the bold table and and the
 -- bold_targets table
--- TODO figure out where to put curation criteria
 CREATE TABLE IF NOT EXISTS "taxa" (
     "taxonid" INTEGER PRIMARY KEY, -- primary key
     "parent_taxonid" INTEGER, -- self-joining foreign key
