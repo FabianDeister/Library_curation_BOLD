@@ -128,7 +128,7 @@ CREATE TABLE IF NOT EXISTS "bold_criteria" (
     "bold_criteria_id" INTEGER PRIMARY KEY, -- primary key
     "recordid" INTEGER NOT NULL, -- index, foreign key to bold table
     "criterionid" INTEGER NOT NULL, -- index, foreign key to criteria
-    "status" INTEGER NOT NULL CHECK (status IN (0, 1)), -- boolean, whether the record qualifies for this criterion
+    "status" INTEGER CHECK (status IN (0, 1)), -- boolean, whether the record qualifies for this criterion
     "notes" TEXT, -- any further notes about the status, if available
     FOREIGN KEY(recordid) REFERENCES bold(recordid),
     FOREIGN KEY(criterionid) REFERENCES criteria(criterionid)
