@@ -16,12 +16,13 @@ our $COLL_DETAILS=8;
 # input is a bold table record and a
 # string version of the name, e.g. 'SPECIES_ID'
 sub assess {
-    my ( $record, $criterion ) = @_;
+    my ( $class, $record, $criterion ) = @_;
+    my $schema = $record->result_source->schema;
 
     # attempt to load the implementation of the criterion
     my $package = __PACKAGE__ . '::' . uc($criterion);
-    eval { require $package };
-    if ( defined $@ ) {
+    eval "require $package";
+    if ( $@ ) {
         croak "Unknown criterion $criterion: $@";
     }
 
@@ -29,11 +30,12 @@ sub assess {
     my ( $status, $notes ) = $package->_assess($record);
 
     # insert into table
-    my $criterionid = $package->_table;
+    my $criterionid = $package->_criterion;
     my $result = $schema->resultset('BoldCriteria')->find_or_create({
-        criterion_id => $criterionid,
-        record_id    => $recordid->recordid
+        criterionid => $criterionid,
+        recordid    => $record->recordid
     });
+
     $result->update({ status => $status, notes => $notes });
 }
 

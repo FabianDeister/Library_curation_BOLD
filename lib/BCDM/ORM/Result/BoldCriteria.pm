@@ -44,7 +44,7 @@ __PACKAGE__->table("bold_criteria");
 =head2 status
 
   data_type: 'integer'
-  is_nullable: 0
+  is_nullable: 1
 
 =head2 notes
 
@@ -61,7 +61,7 @@ __PACKAGE__->add_columns(
   "criterionid",
   { data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
   "status",
-  { data_type => "integer", is_nullable => 0 },
+  { data_type => "integer", is_nullable => 1 },
   "notes",
   { data_type => "text", is_nullable => 1 },
 );
@@ -111,8 +111,8 @@ __PACKAGE__->belongs_to(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07049 @ 2024-01-28 16:48:56
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:67NhZMOmGTCR+kvx3u1xDQ
+# Created by DBIx::Class::Schema::Loader v0.07049 @ 2024-01-28 17:41:17
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:Z7ZlYSWoKhLvzRF1Sv91eg
 
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration
