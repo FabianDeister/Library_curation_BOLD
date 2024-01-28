@@ -450,6 +450,21 @@ __PACKAGE__->set_primary_key("recordid");
 
 =head1 RELATIONS
 
+=head2 bold_criterias
+
+Type: has_many
+
+Related object: L<BCDM::ORM::Result::BoldCriteria>
+
+=cut
+
+__PACKAGE__->has_many(
+  "bold_criterias",
+  "BCDM::ORM::Result::BoldCriteria",
+  { "foreign.recordid" => "self.recordid" },
+  { cascade_copy => 0, cascade_delete => 0 },
+);
+
 =head2 taxonid
 
 Type: belongs_to
@@ -471,8 +486,8 @@ __PACKAGE__->belongs_to(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07049 @ 2024-01-26 17:01:04
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:58jWpXmXvVqhmZVxtIxbFg
+# Created by DBIx::Class::Schema::Loader v0.07049 @ 2024-01-28 16:48:55
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:45HwEeCJQtIx6nkPrhfzdA
 
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration
