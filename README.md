@@ -1,3 +1,5 @@
+![Perl CI](https://github.com/FabianDeister/Library_curation_BOLD/actions/workflows/ci.yml/badge.svg)
+
 # Library curation BOLD
 
 ![alt text](doc/logo_bioscan_europe.png)
