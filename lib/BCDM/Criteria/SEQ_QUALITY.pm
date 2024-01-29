@@ -12,6 +12,13 @@ sub _criterion { $BCDM::Criteria::SEQ_QUALITY }
 # addition, optional notes may be returned.
 # Here, the criterion to assess is:
 # 'Sequence is long, with few ambiguities'
+# This will involve aligning each sequence
+# against an HMM (such as the one from
+# FinPROTAX), trimming the ends outside the
+# 658 bp range, then trimming the gap chars
+# and ambiguities, and reporting the 
+# remainder (notes?) and summarizing that
+# as pass/fail.
 sub _assess {
     my $package = shift;
     my $record = shift;
