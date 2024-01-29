@@ -3,6 +3,7 @@ use strict;
 use warnings;
 use Carp 'croak';
 use BCDM::ORM;
+use Module::Load;
 
 our $SPECIES_ID=1;
 our $TYPE_SPECIMEN=2;
@@ -21,7 +22,7 @@ sub assess {
 
     # attempt to load the implementation of the criterion
     my $package = __PACKAGE__ . '::' . uc($criterion);
-    eval "require $package";
+    eval { load $package };
     if ( $@ ) {
         croak "Unknown criterion $criterion: $@";
     }
