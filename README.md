@@ -1,6 +1,6 @@
 # Library curation BOLD
 
-![alt text](doc/library_curation_image.jpg)
+![alt text](doc/logo_bioscan_europe.png)
 
 This repository contains scripts and synonymy data for pipelining the 
 automated curation of [BOLD](https://boldsystems.org) data dumps in 
