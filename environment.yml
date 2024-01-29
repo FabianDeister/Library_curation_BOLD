@@ -10,4 +10,5 @@ dependencies:
   - perl-bio-phylo-forest-dbtree
   - perl-text-csv_xs
   - perl-log-log4perl
+  - perl-module-load
   - hmmer
