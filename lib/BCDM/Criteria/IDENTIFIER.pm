@@ -12,6 +12,10 @@ sub _criterion { $BCDM::Criteria::IDENTIFIER }
 # addition, optional notes may be returned.
 # Here, the criterion to assess is:
 # 'Specimen was identified by a named person'
+# We probably need a list of the CBG people
+# so that we can filter out staffers who
+# haven't actually done ID beyond reverse
+# taxonomy.
 sub _assess {
     my $package = shift;
     my $record = shift;
