@@ -1,0 +1,36 @@
+name: Perl CI
+
+on: [push, pull_request]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    
+    - name: Set up Perl
+      uses: shogo82148/actions-setup-perl@v1
+      with:
+        perl-version: '5.32'
+
+    - name: Install specific CPAN modules
+      run: |
+        cpanm Perl::Critic
+
+    - name: Install Miniconda
+      uses: conda-incubator/setup-miniconda@v2
+      with:
+        auto-update-conda: true
+        miniconda-version: "latest"
+        python-version: "3.8"  # Specify Python version if needed
+
+    - name: Create and activate Conda environment
+      shell: bash -l {0}
+      run: |
+        conda env create -f environment.yml
+        conda activate bioscan-curation
+
+    - name: Run PerlCritic
+      run: perlcritic --severity 5 .
