@@ -12,6 +12,10 @@ sub _criterion { $BCDM::Criteria::TYPE_SPECIMEN }
 # addition, optional notes may be returned.
 # Here, the criterion to assess is:
 # 'Specimen is a type specimen'
+# This will involve substring matching in 
+# the voucher_type column. There are many
+# distinct values but there is some 
+# regularity to them.
 sub _assess {
     my $package = shift;
     my $record = shift;
