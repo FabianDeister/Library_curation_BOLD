@@ -12,6 +12,11 @@ sub _criterion { $BCDM::Criteria::ID_METHOD }
 # addition, optional notes may be returned.
 # Here, the criterion to assess is:
 # 'Specimen was identified by morphology'
+# This will involve substring matching against
+# identification_method. It looks like there
+# are many that start with '^BIN' or with
+# '^BOLD'. Those are certainly reverse
+# taxonomy.
 sub _assess {
     my $package = shift;
     my $record = shift;
