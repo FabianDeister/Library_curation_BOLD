@@ -7,6 +7,24 @@ use base 'BCDM::Criteria';
 # updates in the intersection table
 sub _criterion { $BCDM::Criteria::TYPE_SPECIMEN }
 
+my @neg = (
+    'DNA',
+    'e-vouch',
+    'private',
+    'no voucher specimen',
+    'no voucher, tissue only',
+    'unvouchered'
+);
+
+my @pos = qw(
+    herb
+    museum
+    registered
+    type
+);
+
+my $log = __PACKAGE__->_get_logger(__PACKAGE__, 'DEBUG');
+
 # this tests the criterion and returns
 # boolean 0/1 depending on fail/pass. In
 # addition, optional notes may be returned.
@@ -19,8 +37,29 @@ sub _criterion { $BCDM::Criteria::TYPE_SPECIMEN }
 sub _assess {
     my $package = shift;
     my $record = shift;
-    # TODO: implement!
-    return 0, undef;
+    my $method = $record->voucher_type;
+    my $id = $record->recordid;
+
+    # Check positive matches
+    my @mp;
+    for my $pattern ( @pos ) {
+         if ( $method =~ /$pattern/ ) {
+            push @mp, $pattern;
+            $log->info("Positive match for $id: $pattern")
+        }
+    }
+
+    # Check negative matches
+    my @mn;
+    for my $pattern ( @neg ) {
+         if ( $method =~ /$pattern/ ) {
+            push @mn, $pattern;
+            $log->info("Negative match for $id: $pattern")
+        }
+    }
+
+    # Return result
+    return @mp > @mn ? 1 : 0, "Based on pos > neg matches (@mp > @mn)";
 }
 
 1;
