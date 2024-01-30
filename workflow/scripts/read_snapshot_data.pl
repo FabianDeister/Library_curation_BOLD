@@ -1,4 +1,3 @@
-#!/usr/bin/perl -w
 use strict;
 use warnings;
 use Getopt::Long qw(GetOptions); # for commandline parameters

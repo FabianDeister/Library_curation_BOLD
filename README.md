@@ -1,6 +1,8 @@
+![Perl CI](https://github.com/FabianDeister/Library_curation_BOLD/actions/workflows/ci.yml/badge.svg)
+
 # Library curation BOLD
 
-![alt text](doc/library_curation_image.jpg)
+![alt text](doc/logo_bioscan_europe.png)
 
 This repository contains scripts and synonymy data for pipelining the 
 automated curation of [BOLD](https://boldsystems.org) data dumps in 
