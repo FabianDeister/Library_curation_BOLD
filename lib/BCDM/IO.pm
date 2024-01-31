@@ -89,9 +89,10 @@ sub AUTOLOAD {
     $method =~ s/.*:://;  # Remove package name
 
     # Check if the key exists in the object's hash
-    if (exists $self->{$method}) {
+    if ( exists $self->{$method} ) {
         return $self->{$method};
-    } else {
+    } 
+    else {
         Carp::carp Dumper($self);
         Carp::croak "No such method '$method'";
     }
