@@ -92,8 +92,8 @@ sub AUTOLOAD {
     if (exists $self->{$method}) {
         return $self->{$method};
     } else {
-        print Dumper($self);
-        croak "No such method '$method'";
+        Carp::carp Dumper($self);
+        Carp::croak "No such method '$method'";
     }
 }
 
