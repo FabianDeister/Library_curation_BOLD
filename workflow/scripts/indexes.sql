@@ -18,6 +18,8 @@ CREATE INDEX IF NOT EXISTS "voucher_type_idx" ON bold ("voucher_type");
 CREATE INDEX IF NOT EXISTS "identification_rank_idx" ON bold ("identification_rank");
 CREATE INDEX IF NOT EXISTS "identification_method_idx" ON bold ("identification_method");
 CREATE INDEX IF NOT EXISTS "taxonid_idx" ON bold ("taxonid");
+CREATE INDEX IF NOT EXISTS "notes_idx" ON bold ("notes");
+CREATE INDEX IF NOT EXISTS "extrainfo_idx" ON bold ("extrainfo");
 
 -- indexes on the targets table
 CREATE INDEX IF NOT EXISTS "target_name_idx" on targets ("name");
