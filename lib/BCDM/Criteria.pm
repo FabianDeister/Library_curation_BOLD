@@ -27,32 +27,39 @@ END
 # input is a bold table record and a
 # string version of the name, e.g. 'SPECIES_ID'
 sub assess {
-    my ( $class, $record, $criterion ) = @_;
-    my $schema = $record->result_source->schema;
+    my ( $self, $record ) = @_;
 
-    # attempt to load the implementation of the criterion
+    # delegate the assessment
+    return $self->_assess($record);
+}
+
+sub persist {
+    my ( $self, %args ) = @_;
+    my $cid    = $self->_criterion;
+    my $record = $args{'record'};
+    my $status = $args{'status'};
+    my $notes  = $args{'notes'};
+    my $schema = $record->result_source->schema;
+    my $result = $schema->resultset('BoldCriteria')->find_or_create({
+        criterionid => $cid,
+        recordid    => $record->recordid,
+    });
+    $result->update({ status => $status, notes => $notes });
+}
+
+sub _get_logger {
+    my ( $self, $name ) = @_;
+    return Log::Log4perl->get_logger($name);
+}
+
+sub load_criterion {
+    my ( $self, $criterion ) = @_;
     my $package = __PACKAGE__ . '::' . uc($criterion);
     eval { load $package };
     if ( $@ ) {
         croak "Unknown criterion $criterion: $@";
     }
-
-    # delegate the assessment
-    my ( $status, $notes ) = $package->_assess($record);
-
-    # insert into table
-    my $criterionid = $package->_criterion;
-    my $result = $schema->resultset('BoldCriteria')->find_or_create({
-        criterionid => $criterionid,
-        recordid    => $record->recordid
-    });
-
-    $result->update({ status => $status, notes => $notes });
-}
-
-sub _get_logger {
-    my ( $package, $name ) = @_;
-    return Log::Log4perl->get_logger($name);
+    return $package;
 }
 
 1;
