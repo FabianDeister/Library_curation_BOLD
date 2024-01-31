@@ -1,5 +1,6 @@
 use strict;
 use warnings;
+use BCDM::IO;
 use BCDM::ORM;
 use BCDM::Criteria;
 use Getopt::Long;
@@ -7,11 +8,13 @@ use Log::Log4perl qw(:easy);
 
 # Process command line arguments
 my $db_file; # where to access database file
+my $tsv_file; # using the raw TSV instead
 my $log_level = 'INFO'; # verbosity level for logger
 my @criteria; # criteria to assess
 my $persist;
 GetOptions(
     'db=s'       => \$db_file,
+    'tsv=s'      => \$tsv_file,
     'log=s'      => \$log_level,
     'criteria=s' => \@criteria,
     'persist'    => \$persist,
@@ -31,8 +34,15 @@ $log->info("Going to assess criteria: @criteria");
 
 # Connect to the database. Because there is a column `order` in the BCDM, we need to
 # escape this. In SQLite that's with double quotes.
-$log->info("Going to connect to database $db_file");
-my $schema = BCDM::ORM->connect("dbi:SQLite:$db_file", "", "", { quote_char => '"' });
+my $io;
+if ( $db_file ) {
+    $log->info("Going to connect to database $db_file");
+    $io = BCDM::IO->new( db => $db_file );
+}
+elsif ( $tsv_file) {
+    $log->info("Going to open TSV file $tsv_file");
+    $io = BCDM::IO->new( tsv => $tsv_file );
+}
 
 # Create map of loaded criteria
 my %crit;
@@ -45,8 +55,8 @@ for my $c ( @criteria ) {
 }
 
 # Iterate over all BOLD records
-my $rs = $schema->resultset('Bold')->search({});
-while (my $record = $rs->next) {
+$io->prepare_rs;
+while (my $record = $io->next) {
     $log->info("Processing record ".$record->recordid) unless $record->recordid % 10_000;
 
     # Iterate over loaded modules
