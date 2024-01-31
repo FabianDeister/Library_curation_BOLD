@@ -17,9 +17,9 @@ GetOptions 	(
 	or die "Usage: $0 -f filename\n"; # report an input arror due to wrong usage
 #-------------------------------------------
 # read species names and synonyms from file
-open(DAT,'<','all_specs_and_syn.csv');
+open my $dat,'<','all_specs_and_syn.csv' or die $!;
 print "\ncollect species names\n";
-while(<DAT>){
+while(<$dat>){
 		my$line=$_; # define the variable $line for the current line 
 		chomp $line; # remove line ending 
 		my@names=split(/;/,$line); # create an array with all the names and synonyms
@@ -30,16 +30,16 @@ while(<DAT>){
 				$europ{$spec}=1; # define the has %europe as present for each name in the list
 			}
 	}
-close DAT; # reset the filehandle
-open(DAT,'<',"$file"); # open BOLD spanshot *.tsv file and define the filehandle DAT
+close $dat; # reset the filehandle
+open $dat,'<',"$file" or die $!; # open BOLD spanshot *.tsv file and define the filehandle DAT
 print "read BOLD data\n"; # show that the script has reached the second part of the process
 unlink "filtered_informations.csv" if -e "filtered_informations.csv"; # delete the output file if it already exists 
-open (OUT,'>>','filtered_informations.csv'); # open the output file
-print OUT "sampleid	species	real_species	ident_rank	voucher_type	seqlength	ambiguities	museum_id	institut	identifier	country	BIN\n"; # print output header in the output file
+open my $out,'>>','filtered_informations.csv' or die $!; # open the output file
+print $out "sampleid	species	real_species	ident_rank	voucher_type	seqlength	ambiguities	museum_id	institut	identifier	country	BIN\n"; # print output header in the output file
 my$count=0; # set the value of $count to 0
 my$count_samples=0;
 my$line_num=0;
-while(<DAT>) {
+while(<$dat>) {
 		if($line_num==0) {
 				$line_num=1;
 				next;
@@ -53,16 +53,16 @@ while(<DAT>) {
 		foreach(@data) {
 				my$val=$_; # current value (subroutine output)
 				chomp$val if defined $val; # remove line ending if $val is defined
-				print  OUT "$val" if defined $val; # print data from subroutine output array 
+				print  $out "$val" if defined $val; # print data from subroutine output array
 				if($progress==1) # indication for $array[1] which contains the species name
 					{
-						print OUT "\t$true{$val}" # print valid name of species ($val) as seperate collumn in the output file
+						print $out "\t$true{$val}" # print valid name of species ($val) as seperate collumn in the output file
 					}
-				print  OUT "\t"; # add separator to the output to end the collumn
+				print  $out "\t"; # add separator to the output to end the collumn
 				$progress++; # increase the value $progress
 			}
 		$count_samples++;	
-		print  OUT "\n"; # add line ending to start in a new line in the next loop
+		print  $out "\n"; # add line ending to start in a new line in the next loop
 		$count++ unless defined $done{$true{$data[1]}}; # count species only once
 		$done{$true{$data[1]}}=1; # define the hash %done for the current species name
 	}
