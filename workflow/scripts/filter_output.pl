@@ -1,9 +1,8 @@
-#!/usr/bin/perl -w
 use strict;
 use warnings;
-open(DAT,"<draft_filtered_informations.csv");
+open my $dat, '<', 'draft_filtered_informations.csv' or die $!;
 my$count=0;
-while(<DAT>)
+while(<$dat>)
 	{
 		my$line=$_;
 		my@array=split(/	/,$line);
