@@ -22,7 +22,7 @@ sub _criterion { $BCDM::Criteria::SEQ_QUALITY }
 sub _assess {
     my $package = shift;
     my $record = shift;
-    my $sequence = $record->sequence;
+    my $sequence = $record->nucraw;
     my $id = $record->recordid;
     chomp $sequence;
     my@sequence_array=split(//,$sequence);
