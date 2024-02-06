@@ -20,6 +20,8 @@ sub _assess {
     my $package = shift;
     my $record = shift;
     # TODO: implement!
+    my $collector = $record->collectors;
+    my $coll_date = $record->collection_date;
     return 0, undef;
 }
 
