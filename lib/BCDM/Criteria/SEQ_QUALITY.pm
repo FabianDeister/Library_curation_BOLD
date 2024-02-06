@@ -23,6 +23,22 @@ sub _assess {
     my $package = shift;
     my $record = shift;
     # TODO: implement!
+    my $sequence = $record->sequence;
+    my $id = $record->recordid;
+    chomp $sequence;
+    AGAIN:
+    my@sequence_array=split(//,$sequence);
+    if($sequence_array[0]=~/^[AGTC]$/) {
+        shift @sequence_array;
+        goto AGAIN
+    }
+    if($sequence_array[-1]=~/^[AGTC]$/) {
+        pop @sequence_array
+        goto AGAIN
+    }   
+    $sequence=join('',@sequence_array);
+    my$ambigu=$sequence=~tr/A,G,T,C,-//;
+    my$seqleng=length $sequence;
     return 0, undef;
 }
 
