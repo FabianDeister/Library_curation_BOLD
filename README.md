@@ -2,7 +2,7 @@
 
 # Library curation BOLD
 
-![alt text](doc/logo_bioscan_europe.png)
+![alt text](doc/iBOL_Eur_logo_white.png)
 
 This repository contains scripts and synonymy data for pipelining the 
 automated curation of [BOLD](https://boldsystems.org) data dumps in 
