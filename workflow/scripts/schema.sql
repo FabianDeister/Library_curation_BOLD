@@ -67,13 +67,13 @@ CREATE TABLE IF NOT EXISTS "bold"(
 
 -- the canonical names of the target list. For
 -- extensibility there is a field for the name of the
--- target list (e.g. 'BIOSCAN') so that multiple lists
+-- target list (e.g. 'iBOL-Europe') so that multiple lists
 -- can live here, e.g. for different projects, taxonomic
 -- groups, geographic entities, etc.
 CREATE TABLE IF NOT EXISTS "targets" (
     "targetid" INTEGER PRIMARY KEY, -- primary key
     "name" TEXT NOT NULL, -- index, species name
-    "targetlist" TEXT NOT NULL -- index, e.g. 'BIOSCAN'
+    "targetlist" TEXT NOT NULL -- index, e.g. 'iBOL-Europe'
 );
 
 -- manages the one-to-many relationship between canonical
