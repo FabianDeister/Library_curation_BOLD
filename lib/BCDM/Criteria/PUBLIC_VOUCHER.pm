@@ -10,10 +10,18 @@ sub _criterion { $BCDM::Criteria::PUBLIC_VOUCHER }
 my @neg = (
     'DNA',
     'e-vouch',
-    'private',
-    'no voucher specimen',
-    'no voucher, tissue only',
-    'unvouchered'
+    'privat',
+    'no voucher',
+    'unvouchered',
+    'destr',
+    'lost',
+    'missing',
+    'no specimen',
+    'none',
+    'not vouchered',
+    'person',
+    'Photo Voucher Only',
+    'not registered',
 );
 
 my @pos = qw(
@@ -21,6 +29,13 @@ my @pos = qw(
     museum
     registered
     type
+    national
+    CBG
+    INHS
+    deposit
+    harbarium
+    hebarium
+    holot
 );
 
 my $log = __PACKAGE__->_get_logger(__PACKAGE__, 'DEBUG');
