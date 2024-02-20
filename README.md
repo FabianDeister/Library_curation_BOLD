@@ -2,7 +2,7 @@
 
 # Library curation BOLD
 
-![alt text](doc/logo_bioscan_europe.png)
+![alt text](doc/IBOL_LOGO_TRANSPARENT.png)
 
 This repository contains scripts and synonymy data for pipelining the 
 automated curation of [BOLD](https://boldsystems.org) data dumps in 
@@ -28,7 +28,7 @@ to the current state of the art.
 
 The code in this repo depends on various tools. These are managed using
 the `mamba` program (a drop-in replacement of `conda`). The following
-sets up an environment in which the needed tools are installed:
+sets up an environment in which all needed tools are installed:
 
 ```{shell}
 $ mamba env create -f environment.yml

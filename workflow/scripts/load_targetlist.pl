@@ -8,7 +8,7 @@ use Log::Log4perl qw(:easy);
 my $targetlist; # location of ;-separated target list
 my $db_file;    # where to create database file
 my $log_level   = 'INFO'; # verbosity level for logger
-my $project     = 'BGE-BIOSCAN'; # name of the project/target
+my $project     = 'BGE-iBOL-Europe'; # name of the project/target
 my $taxon_level = 'species'; # what level we're using
 my $kingdom     = 'Animalia'; # default is animals/COI-5P
 GetOptions(

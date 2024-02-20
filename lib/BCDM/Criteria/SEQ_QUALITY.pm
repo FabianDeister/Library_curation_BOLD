@@ -22,7 +22,25 @@ sub _criterion { $BCDM::Criteria::SEQ_QUALITY }
 sub _assess {
     my $package = shift;
     my $record = shift;
-    # TODO: implement!
+    my $sequence = $record->nucraw;
+    my $id = $record->recordid;
+    chomp $sequence;
+    my@sequence_array=split(//,$sequence);
+    # Remove everything except for valid nucleotides from start and end of the sequence
+    AGAIN:
+    if($sequence_array[0]=~/^[AGTC]$/) {
+        shift @sequence_array;
+        goto AGAIN
+    }
+    if($sequence_array[-1]=~/^[AGTC]$/) {
+        pop @sequence_array;
+        goto AGAIN
+    }   
+    $sequence=join('',@sequence_array);
+    # Get number of ambigous characters
+    my$ambigu=$sequence=~tr/A,G,T,C,-//;
+    # Determine pure sequence length
+    my$seqleng=length $sequence;
     return 0, undef;
 }
 
