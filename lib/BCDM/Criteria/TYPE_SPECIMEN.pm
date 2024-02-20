@@ -12,7 +12,6 @@ my $log = __PACKAGE__->_get_logger(__PACKAGE__, 'DEBUG');
 
 # We will match against these
 my @types = qw(
-    type
     holotype
     lectotype
     isotype
@@ -40,14 +39,19 @@ sub _assess {
         for my $type ( @types ) {
             if ( $record->$field =~ /$type/i ) {
                 $matches++;
-                $log->info("Matched $field for $type in $rid");
+                $log->info("Matched $field for /$type/i in $rid");
             }
         }
     }
 
+    if ( $record->voucher_type =~ /type/i ) {
+        $matches++;
+        $log->info("Matched voucher_type for /type/i in $rid");
+    }
+
     # The return value consists of two parts, here separated by commas. The first part is the
     # outcome of the ternary operator, either 0 or 1. The second part is the quoted message.
-    return $matches > 0 ? 1 : 0, 'By matching /type/ against extrainfo, voucher_status, notes';
+    return $matches > 0 ? 1 : 0, "By matching '@types' against extrainfo, voucher_type, notes and voucher_type against /type/i";
 }
 
 1;
