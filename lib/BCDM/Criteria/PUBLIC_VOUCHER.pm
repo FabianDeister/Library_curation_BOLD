@@ -74,7 +74,14 @@ sub _assess {
     }
 
     # Return result
-    return @mp > @mn ? 1 : 0, "Based on pos > neg matches (@mp > @mn)";
+    my $result = undef;
+    if ( @mp ) {
+        $result = 1;
+    }
+    elsif ( @mn ) {
+        $result = 0;
+    }
+    return $result, "Based on whether has positive (@mp)/1, negative (@mn)/0, or no matches (null)";
 }
 
 1;
