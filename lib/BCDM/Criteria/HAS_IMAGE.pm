@@ -27,29 +27,50 @@ sub _criterion { $BCDM::Criteria::HAS_IMAGE }
 sub _assess {
     my $package  = shift;
     my $record   = shift;
+    my $logger   = $package->_get_logger;
     my $process  = $record->processid;
     my $wspoint  = $base_url . $process;
     my $uagent   = LWP::UserAgent->new;
+
+    # going to attempt request
+    $logger->debug("Attempting $wspoint");
     my $response = $uagent->get($wspoint);
+
+    # inspect HTTP::Response
     if ( $response->is_success) {
+
+        # parse content
+        $logger->debug("Request was successful");
         my $json = $response->decoded_content;
+        $logger->debug($json);
         my $hash = decode_json $json;
 
         eval {
-            my $loc = $hash->{bold_records}->{records}->{$process}->{specimen_imagery}->{media}->[0]->{image_file};
-            if ( $loc ) {
+
+            # traverse serialized JSON structure, should always exist up to $process
+            my $p = $hash->{bold_records}->{records}->{$process};
+            if ( exists $p->{specimen_imagery} ) {
+                my $loc = $p->{specimen_imagery}->{media}->[0]->{image_file};
+                $logger->info($loc);
                 return 1, $loc;
             }
             else {
-                return 0, 'no image URL in JSON';
+
+                # we will most likely never reach this. de-referencing the path in the JSON will simply error
+                my $note = 'no specimen_imagery in JSON';
+                $logger->debug($note);
+                return 0, $note;
             }
         };
         if ( $@ ) {
+
+            # unless $loc exists in the JSON, we will end up here
+            $logger->error($@);
             return 0, $@;
         }
     }
     else {
-        die $response->status_line;
+        $logger->error($response->status_line);
     }
 }
 
