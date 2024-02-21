@@ -11,4 +11,5 @@ dependencies:
   - perl-text-csv_xs
   - perl-log-log4perl
   - perl-module-load
+  - perl-json
   - hmmer
