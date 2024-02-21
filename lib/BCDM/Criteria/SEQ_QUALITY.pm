@@ -21,20 +21,9 @@ sub _criterion { $BCDM::Criteria::SEQ_QUALITY }
 # as pass/fail.
 sub _assess {
     my $package = shift;
-    my $record = shift;
-    my $sequence = $record->nucraw;
-    my $id = $record->recordid;
-
-    # Remove everything except for valid nucleotides from start and end of the sequence
-    $sequence =~ s/^[^ACGT]*//;
-    $sequence =~ s/[^ACGT]*$//;
-
-    # Get number of ambigous characters
-    my $ambigu = $sequence =~ tr/A,G,T,C,-//;
-
-    # Determine pure sequence length
-    my $seqleng = length $sequence;
-    return 0, undef;
+    my $record  = shift;
+    my $bin_uri = $record->bin_uri;
+    return $bin_uri eq 'None' ? 0 : 1, 'Verified by presence of BIN assignment';
 }
 
 1;
