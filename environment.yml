@@ -2,6 +2,7 @@ name: bioscan-curation
 channels:
   - conda-forge
   - bioconda
+  - eumetsat
   - defaults
 dependencies:
   - snakemake
