@@ -3,6 +3,30 @@ use strict;
 use warnings;
 use base 'BCDM::Criteria';
 
+my @key_columns = qw(
+    collectors
+    collection_date
+    country
+    site
+    coord
+);
+
+my @colums = qw(
+    province
+    region
+    sector
+    elev
+    depth
+    elev_accuracy
+    depth_accuracy
+    coord_source
+    coord_accuracy
+    collection_time
+    collection_date_accuracy
+    habitat
+    collection_note
+);
+
 # this so that we know the criterionid for
 # updates in the intersection table
 sub _criterion { $BCDM::Criteria::COLL_DETAILS }
