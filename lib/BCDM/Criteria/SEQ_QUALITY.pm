@@ -22,7 +22,20 @@ sub _criterion { $BCDM::Criteria::SEQ_QUALITY }
 sub _assess {
     my $package = shift;
     my $record  = shift;
+    my $logger  = $package->_get_logger;
     my $bin_uri = $record->bin_uri;
+    my $nucraw  = $record->nucraw;
+
+    # remove leading and trailing non-ACGT characters
+    $logger->debug('Removing leading/trailing non-ACGT characters');
+    $nucraw =~ s/^[^ACGTacgt]*//;
+    $nucraw =~ s/[^ACGTacgt]*$//;
+
+    # count the number of unambiguous characters here
+    my $count = ($nucraw =~ tr/ACGTacgt//);
+
+    # TODO: implement the grading
+
     return $bin_uri eq 'None' ? 0 : 1, 'Verified by presence of BIN assignment';
 }
 
