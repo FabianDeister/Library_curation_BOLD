@@ -15,6 +15,7 @@ CREATE INDEX IF NOT EXISTS "subspecies_idx" ON bold ("subspecies");
 CREATE INDEX IF NOT EXISTS "gb_acs_idx" ON bold ("gb_acs");
 CREATE INDEX IF NOT EXISTS "marker_code_idx" ON bold ("marker_code");
 CREATE INDEX IF NOT EXISTS "voucher_type_idx" ON bold ("voucher_type");
+CREATE INDEX IF NOT EXISTS "identified_by_idx" ON bold ("identified_by");
 CREATE INDEX IF NOT EXISTS "identification_rank_idx" ON bold ("identification_rank");
 CREATE INDEX IF NOT EXISTS "identification_method_idx" ON bold ("identification_method");
 CREATE INDEX IF NOT EXISTS "taxonid_idx" ON bold ("taxonid");
