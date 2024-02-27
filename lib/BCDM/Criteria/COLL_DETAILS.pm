@@ -43,10 +43,16 @@ sub _criterion { $BCDM::Criteria::COLL_DETAILS }
 sub _assess {
     my $package = shift;
     my $record = shift;
-    # TODO: implement!
-    my $collector = $record->collectors;
-    my $coll_date = $record->collection_date;
-    return 0, undef;
+
+    my $site = $record->site;
+    my $date = $record->collection_date;
+
+    if ( $site ne 'None' and $date ne 'None' ) {
+        return 1, 'Site and collection date are not "None"';
+    }
+    else {
+        return 0, 'Either site or collection date is "None"';
+    }
 }
 
 1;
