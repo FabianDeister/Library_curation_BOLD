@@ -34,9 +34,13 @@ sub _assess {
     # count the number of unambiguous characters here
     my $count = ($nucraw =~ tr/ACGTacgt//);
 
-    # TODO: implement the grading
-
-    return $bin_uri eq 'None' ? 0 : 1, 'Verified by presence of BIN assignment';
+    # TODO have minlength managed by config.yml
+    if ( $bin_uri ne 'None' and $count >= 500 ) {
+        return 1, 'Has BIN assignment and length >= 500bp';
+    }
+    else {
+        return 0, 'No BIN assignment and/or length < 500bp';
+    }
 }
 
 1;
