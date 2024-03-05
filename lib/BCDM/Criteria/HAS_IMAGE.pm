@@ -3,9 +3,16 @@ use strict;
 use warnings;
 use JSON;
 use LWP::UserAgent;
+use Time::HiRes 'usleep';
 use base 'BCDM::Criteria';
 
-my $base_url = 'http://boldsystems.org/index.php/API_Public/specimen?format=json&ids=';
+# number of microsends to sleep before requests. Can be adjusted from outside the module via something like 500:
+# $BCDM::Criteria::HAS_IMAGE::SLEEP = 500;
+our $SLEEP = 100;
+
+# endpoints to the CAOS object store. I wonder if the port number is fixed.
+my $base_url  = 'https://caos.boldsystems.org:31488/api/images?processids=';
+my $image_url = 'https://caos.boldsystems.org:31488/api/objects/';
 
 # http://boldsystems.org/index.php/API_Public/specimen?format=json&ids=ABINP144-21
 
@@ -25,12 +32,14 @@ sub _criterion { $BCDM::Criteria::HAS_IMAGE }
 # and then traversing the returned JSON to look for an image. Probably an 
 # expensive operation!
 sub _assess {
+    usleep(100);
     my $package  = shift;
     my $record   = shift;
-    my $logger   = $package->_get_logger;
+    my $logger   = $package->_get_logger(__PACKAGE__);
     my $process  = $record->processid;
     my $wspoint  = $base_url . $process;
     my $uagent   = LWP::UserAgent->new;
+    my @return; # return value to populate
 
     # going to attempt request
     $logger->debug("Attempting $wspoint");
@@ -39,39 +48,41 @@ sub _assess {
     # inspect HTTP::Response
     if ( $response->is_success) {
 
-        # parse content
-        $logger->debug("Request was successful");
+        # fetch content
         my $json = $response->decoded_content;
-        $logger->debug($json);
-        my $hash = decode_json $json;
 
+        # attempt to parse JSON
         eval {
+            my $array_ref = decode_json $json;
 
-            # traverse serialized JSON structure, should always exist up to $process
-            my $p = $hash->{bold_records}->{records}->{$process};
-            if ( exists $p->{specimen_imagery} ) {
-                my $loc = $p->{specimen_imagery}->{media}->[0]->{image_file};
-                $logger->info($loc);
-                return 1, $loc;
+            # successfully parsed JSON list, which is not empty
+            if ( scalar @$array_ref ) {
+
+                # example: https://caos.boldsystems.org:31488/api/images?processids=BBF341-13
+                my $loc = $image_url . $array_ref->[0]->{'objectid'};
+                $logger->info("image at $loc");
+                @return = ( 1, $loc );
             }
             else {
 
                 # we will most likely never reach this. de-referencing the path in the JSON will simply error
-                my $note = 'no specimen_imagery in JSON';
-                $logger->debug($note);
-                return 0, $note;
+                my $note = "empty list: no images at $wspoint";
+                @return = ( 0, $note );
             }
         };
         if ( $@ ) {
 
             # unless $loc exists in the JSON, we will end up here
             $logger->error($@);
-            return 0, $@;
+            @return = ( 0, $@ );
         }
     }
     else {
         $logger->error($response->status_line);
     }
+
+    #
+    return @return;
 }
 
 1;
