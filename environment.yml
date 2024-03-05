@@ -13,6 +13,6 @@ dependencies:
   - perl-log-log4perl
   - perl-module-load
   - perl-json
-  - perl-lwp
+  - perl-libwww-perl
   - perl-lwp-protocol-https
   - hmmer
