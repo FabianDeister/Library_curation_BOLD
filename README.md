@@ -31,13 +31,13 @@ the `mamba` program (a drop-in replacement of `conda`). The following
 sets up an environment in which all needed tools are installed:
 
 ```{shell}
-$ mamba env create -f environment.yml
+mamba env create -f environment.yml
 ```
 
 Once set up, this is activated like so:
 
 ```{shell}
-$ mamba activate bioscan-curation
+mamba activate bioscan-curation
 ```
 
  
