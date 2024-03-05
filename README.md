@@ -40,4 +40,17 @@ Once set up, this is activated like so:
 mamba activate bioscan-curation
 ```
 
+## How to run
+
+Although the aim of this project is to integrate all steps of the process
+in a simple snakemake pipeline, at present this is not implemented. Instead,
+the steps are executed individually on the command line as perl scripts
+within the conda/mamba environment. Because the current project has its own
+perl modules in the `lib` folder, every script needs to be run with the 
+additional include flag to add the module folder to the search path. Hence,
+the invocation looks like the following inside the scripts folder:
+
+```{shell}
+perl -I../../lib scriptname.pl -arg1 val1 -arg2 val2
+```
  
