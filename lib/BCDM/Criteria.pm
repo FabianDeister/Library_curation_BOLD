@@ -13,8 +13,11 @@ our $PUBLIC_VOUCHER=4;
 our $HAS_IMAGE=5;
 our $IDENTIFIER=6;
 our $ID_METHOD=7;
-our $COLL_DETAILS=8;
-
+our $COLLECTORS=8;
+our $COLLECTION_DATE=9;
+our $COUNTRY=10;
+our $SITE=11;
+our $COORD=12;
 
 # Initialize Log::Log4perl
 Log::Log4perl->init(\<<"END");
@@ -26,11 +29,25 @@ END
 
 # input is a bold table record and a
 # string version of the name, e.g. 'SPECIES_ID'
-sub assess {
-    my ( $self, $record ) = @_;
+{
+    my @queue;
+    sub assess {
+        my ($self, %args) = @_;
 
-    # delegate the assessment
-    return $self->_assess($record);
+        # delegate the assessment
+        if ( scalar(@queue) == $self->_batch_size ) {
+            my @result = $self->_assess(@queue);
+            while( @result ) {
+                my $status = shift @result;
+                my $notes  = shift @result;
+                $args{handler}->( $status, $notes );
+            }
+            @queue = ();
+        }
+        else {
+            push @queue, $args{record};
+        }
+    }
 }
 
 sub persist {
@@ -61,5 +78,7 @@ sub load_criterion {
     }
     return $package;
 }
+
+sub _batch_size { 1 }
 
 1;
