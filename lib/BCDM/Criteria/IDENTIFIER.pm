@@ -3,6 +3,14 @@ use strict;
 use warnings;
 use base 'BCDM::Criteria';
 
+# values we assessed are not taxonomic experts
+my %cbg = (
+    'Kate Perez'     => 1,
+    'Angela Telfer'  => 1,
+    'BOLD ID Engine' => 1,
+    'None'           => 1,
+);
+
 # this so that we know the criterionid for
 # updates in the intersection table
 sub _criterion { $BCDM::Criteria::IDENTIFIER }
@@ -12,15 +20,20 @@ sub _criterion { $BCDM::Criteria::IDENTIFIER }
 # addition, optional notes may be returned.
 # Here, the criterion to assess is:
 # 'Specimen was identified by a named person'
-# We probably need a list of the CBG people
-# so that we can filter out staffers who
-# haven't actually done ID beyond reverse
-# taxonomy.
 sub _assess {
     my $package = shift;
     my $record = shift;
-    # TODO implement me
-    return 0, undef;
+    my $identifier = $record->identified_by;
+
+    # known entity not considered an export
+    if ( $cbg{$identifier} ) {
+        return 0, "identified_by: '$identifier'";
+    }
+
+    # everything else
+    else {
+        return 1, "identified_by: '$identifier'";
+    }
 }
 
 1;
