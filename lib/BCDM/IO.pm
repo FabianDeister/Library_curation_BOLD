@@ -66,12 +66,12 @@ sub next {
     elsif ( my $tsv = $self->{'tsv'} ) {
         my $fh = $self->{'fh'};
         my $row = $tsv->getline_hr($fh);
-        if ( %$row ) {
+        if ( $row and %$row ) {
             $row->{recordid} = $. - 1;
             return BCDM::IO::TSVRecord->new($row);
         }
         else {
-            return undef;
+            return;
         }
     }
 }
