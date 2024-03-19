@@ -8,7 +8,7 @@ use base 'BCDM::Criteria';
 
 # number of microsends to sleep before requests. Can be adjusted from outside the module via something like 500:
 # $BCDM::Criteria::HAS_IMAGE::SLEEP = 500;
-our $SLEEP = 100;
+our $SLEEP = 500;
 
 # endpoints to the CAOS object store. I wonder if the port number is fixed.
 my $base_url  = 'https://caos.boldsystems.org:31488/api/images?processids=';
@@ -32,11 +32,11 @@ sub _criterion { $BCDM::Criteria::HAS_IMAGE }
 # and then traversing the returned JSON to look for an image. Probably an 
 # expensive operation!
 sub _assess {
-    usleep(100);
+    usleep($SLEEP);
     my $package  = shift;
-    my $record   = shift;
+    my @record   = @_;
     my $logger   = $package->_get_logger(__PACKAGE__);
-    my $process  = $record->processid;
+    my $process  = join ',', map { $_->processid } @record;
     my $wspoint  = $base_url . $process;
     my $uagent   = LWP::UserAgent->new;
     my @return; # return value to populate
@@ -59,22 +59,31 @@ sub _assess {
             if ( scalar @$array_ref ) {
 
                 # example: https://caos.boldsystems.org:31488/api/images?processids=BBF341-13
-                my $loc = $image_url . $array_ref->[0]->{'objectid'};
-                $logger->info("image at $loc");
-                @return = ( 1, $loc );
+                my $i = 0;
+                my %map = map { $_->processid => { i => $i++, retval => [ 0, 'no images' ] } } @record;
+                for my $res ( @$array_ref) {
+                    my $pid = $res->{processid};
+                    my $oid = $res->{objectid};
+                    $map{$pid}->{retval} = [ 1, $image_url . $oid ];
+                    $logger->info("Image for $pid: ${image_url}${oid}");
+                }
+
+                # push into return array, sorted
+                @return = map { @{ $_->{retval} } } sort { $a->{i} <=> $b->{i} } values %map;
             }
             else {
 
                 # we will most likely never reach this. de-referencing the path in the JSON will simply error
                 my $note = "empty list: no images at $wspoint";
-                @return = ( 0, $note );
+                $logger->info($note);
+                push @return, ( 0, $note ) for @record;
             }
         };
         if ( $@ ) {
 
             # unless $loc exists in the JSON, we will end up here
             $logger->error($@);
-            @return = ( 0, $@ );
+            push @return, ( 0, $@ ) for @record;
         }
     }
     else {
@@ -84,5 +93,7 @@ sub _assess {
     #
     return @return;
 }
+
+sub _batch_size { 100 }
 
 1;

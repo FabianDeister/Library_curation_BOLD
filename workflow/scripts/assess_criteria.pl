@@ -7,11 +7,11 @@ use Getopt::Long;
 use Log::Log4perl qw(:easy);
 
 # Process command line arguments
-my $db_file; # where to access database file
+my $db_file;  # where to access database file
 my $tsv_file; # using the raw TSV instead
 my $log_level = 'INFO'; # verbosity level for logger
-my @criteria; # criteria to assess
-my $persist;
+my $persist   = 0;
+my @criteria; # e.g. HAS_IMAGE
 GetOptions(
     'db=s'       => \$db_file,
     'tsv=s'      => \$tsv_file,
@@ -62,23 +62,33 @@ while (my $record = $io->next) {
     # Iterate over loaded modules
     for my $impl ( values %crit ) {
 
+        # Code reference passed into the assess() function to run batches
+        my $handler = sub {
+            my ( $status, $notes ) = @_;
+
+            # Persist to database or print to stdout
+            if ( $persist ) {
+                $impl->persist(
+                    record => $record,
+                    status => $status,
+                    notes  => $notes
+                );
+            }
+            else {
+
+                # No primary key in the output, needs to be generated
+                my $cid = $impl->_criterion;
+                my $rid = $record->recordid;
+                print join( "\t", $rid, $cid, $status, $notes ), "\n";
+            }
+        };
+
         # Do the assessment
-        my ( $status, $notes ) = $impl->assess($record);
+        $impl->assess(
+            record  => $record,
+            handler => $handler
+        );
 
-        # Persist to database or print to stdout
-        if ( $persist ) {
-            $impl->persist(
-                record => $record,
-                status => $status,
-                notes  => $notes
-            );
-        }
-        else {
 
-            # No primary key in the output, needs to be generated
-            my $cid = $impl->_criterion;
-            my $rid = $record->recordid;
-            print join( "\t", $rid, $cid, $status, $notes ), "\n";
-        }
     }
 }

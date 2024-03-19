@@ -22,7 +22,7 @@ sub _criterion { $BCDM::Criteria::SEQ_QUALITY }
 sub _assess {
     my $package = shift;
     my $record  = shift;
-    my $logger  = $package->_get_logger;
+    my $logger  = $package->_get_logger(__PACKAGE__, 'INFO');
     my $bin_uri = $record->bin_uri;
     my $nucraw  = $record->nucraw;
 

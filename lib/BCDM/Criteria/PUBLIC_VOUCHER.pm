@@ -74,7 +74,7 @@ sub _assess {
     }
 
     # Return result
-    my $result = undef;
+    my $result = 0;
     if ( @mp ) {
         $result = 1;
     }
