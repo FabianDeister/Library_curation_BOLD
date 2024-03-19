@@ -34,7 +34,10 @@ END
     sub assess {
         my ($self, %args) = @_;
 
-        # delegate the assessment
+        # add the record to the queue
+        push @queue, $args{record};
+
+        # delegate the assessment if the queue is full
         if ( scalar(@queue) == $self->_batch_size ) {
             my @result = $self->_assess(@queue);
             while( @result ) {
@@ -43,9 +46,6 @@ END
                 $args{handler}->( $status, $notes );
             }
             @queue = ();
-        }
-        else {
-            push @queue, $args{record};
         }
     }
 }
