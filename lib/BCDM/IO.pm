@@ -9,7 +9,7 @@ use Log::Log4perl qw(:easy);
 Log::Log4perl->init(\<<"END");
   log4perl.rootLogger = INFO, Screen
   log4perl.appender.Screen = Log::Log4perl::Appender::Screen
-  log4perl.appender.Screen.stderr = 0
+  log4perl.appender.Screen.stderr = 1
   log4perl.appender.Screen.layout = Log::Log4perl::Layout::SimpleLayout
 END
 
