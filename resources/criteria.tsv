@@ -6,4 +6,8 @@ criterionid	name	description
 5	HAS_IMAGE	Specimen is photographed
 6	IDENTIFIER	Specimen was identified by a named person
 7	ID_METHOD	Specimen was identified by morphology
-8	COLL_DETAILS	Specimen has collection date, locality, and collector
+8	COLLECTORS	Specimen was collected by a named person
+9	COLLECTION_DATE	Specimen has a known collection data
+10	COUNTRY	Specimen has a known collection country
+11	SITE	Specimen has a known collection site
+12	COORD	Specimen has known collection coordinates
