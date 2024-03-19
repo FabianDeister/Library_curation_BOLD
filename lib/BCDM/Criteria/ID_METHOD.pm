@@ -56,26 +56,27 @@ sub _assess {
     my $method = $record->identification_method;
     my $id = $record->recordid;
 
+
+    # Check negative matches
+    # my @mn;
+    # for my $pattern ( @neg ) {
+    #      if ( $method =~ /$pattern/ ) {
+    #         push @mn, $pattern;
+    #         $log->info("Negative match for $id: $pattern")
+    #     }
+    # }
+
     # Check positive matches
-    my @mp;
+    my $retval = 0;
     for my $pattern ( @pos ) {
          if ( $method =~ /$pattern/ ) {
-            push @mp, $pattern;
+            $retval = 1;
             $log->info("Positive match for $id: $pattern")
         }
     }
 
-    # Check negative matches
-    my @mn;
-    for my $pattern ( @neg ) {
-         if ( $method =~ /$pattern/ ) {
-            push @mn, $pattern;
-            $log->info("Negative match for $id: $pattern")
-        }
-    }
-
     # Return result
-    return @mp > @mn ? 1 : 0, "Based on pos > neg matches (@mp > @mn)";
+    return $retval, "Based on positive match against any of '@pos'";
 }
 
 1;
