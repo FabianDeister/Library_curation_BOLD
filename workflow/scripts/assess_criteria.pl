@@ -64,7 +64,7 @@ while (my $record = $io->next) {
 
         # Code reference passed into the assess() function to run batches
         my $handler = sub {
-            my ( $status, $notes ) = @_;
+            my ( $status, $notes, $i ) = @_;
 
             # Persist to database or print to stdout
             if ( $persist ) {
@@ -78,7 +78,7 @@ while (my $record = $io->next) {
 
                 # No primary key in the output, needs to be generated
                 my $cid = $impl->_criterion;
-                my $rid = $record->recordid;
+                my $rid = ( $record->recordid - $impl->_batch_size + $i );
                 print join( "\t", $rid, $cid, $status, $notes ), "\n";
             }
         };
