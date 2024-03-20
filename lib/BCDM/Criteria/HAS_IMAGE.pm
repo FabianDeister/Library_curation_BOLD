@@ -60,7 +60,7 @@ sub _assess {
 
                 # example: https://caos.boldsystems.org:31488/api/images?processids=BBF341-13
                 my $i = 0;
-                my %map = map { $_->processid => { i => $i++, retval => [ 0, 'no images' ] } } @record;
+                my %map = map { $_->processid => { i => ++$i, retval => [ 0, 'no images' ] } } @record;
                 for my $res ( @$array_ref) {
                     my $pid = $res->{processid};
                     my $oid = $res->{objectid};
