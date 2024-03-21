@@ -30,7 +30,7 @@ jobs:
       shell: bash -l {0}
       run: |
         conda env create -f environment.yml
-        conda activate bioscan-curation
+        conda activate bold-curation
 
     - name: Run PerlCritic
       run: perlcritic --severity 5 .

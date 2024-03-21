@@ -37,7 +37,7 @@ mamba env create -f environment.yml
 Once set up, this is activated like so:
 
 ```{shell}
-mamba activate bioscan-curation
+mamba activate bold-curation
 ```
 
 ## How to run
