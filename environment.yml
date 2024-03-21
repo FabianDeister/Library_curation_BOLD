@@ -1,4 +1,4 @@
-name: bioscan-curation
+name: bold-curation
 channels:
   - conda-forge
   - bioconda
