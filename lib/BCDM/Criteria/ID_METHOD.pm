@@ -17,12 +17,23 @@ my @pos = qw(
     identifier
     key
     label
-    lit
+    literature
     micros
     mor
-    taxonomy
+    taxonomic
     type
     vou
+    guide
+    flora
+    specimen
+    traditional
+    visual
+    wing
+    logical
+    knowledge
+    photo
+    verified
+    key
 );
 
 my @neg = qw(
@@ -33,9 +44,17 @@ my @neg = qw(
     COX
     DNA
     mole
-    phyl
+    phylo
     sequ
     tree
+    bin
+    silva
+    ncbi
+    engine
+    blast
+    genbank
+    genetic
+    its
 );
 
 my $log = __PACKAGE__->_get_logger(__PACKAGE__, 'DEBUG');
@@ -60,7 +79,7 @@ sub _assess {
     # Check negative matches
     # my @mn;
     # for my $pattern ( @neg ) {
-    #      if ( $method =~ /$pattern/ ) {
+    #      if ( $method =~ /$pattern/i ) {
     #         push @mn, $pattern;
     #         $log->info("Negative match for $id: $pattern")
     #     }
