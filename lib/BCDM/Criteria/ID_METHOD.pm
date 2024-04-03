@@ -69,7 +69,7 @@ sub _assess {
     # Check positive matches
     my $retval = 0;
     for my $pattern ( @pos ) {
-         if ( $method =~ /$pattern/ ) {
+         if ( $method =~ /$pattern/i ) {
             $retval = 1;
             $log->info("Positive match for $id: $pattern")
         }
