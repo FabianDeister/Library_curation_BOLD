@@ -45,7 +45,7 @@ __PACKAGE__->table("bold");
   data_type: 'text'
   is_nullable: 1
 
-=head2 specimenid
+=head2 fieldid
 
   data_type: 'text'
   is_nullable: 1
@@ -55,12 +55,17 @@ __PACKAGE__->table("bold");
   data_type: 'text'
   is_nullable: 1
 
-=head2 fieldid
+=head2 record_id
 
   data_type: 'text'
   is_nullable: 1
 
-=head2 inst
+=head2 specimenid
+
+  data_type: 'text'
+  is_nullable: 1
+
+=head2 processid_minted_date
 
   data_type: 'text'
   is_nullable: 1
@@ -70,12 +75,22 @@ __PACKAGE__->table("bold");
   data_type: 'text'
   is_nullable: 1
 
-=head2 identification
+=head2 bin_created_date
 
   data_type: 'text'
   is_nullable: 1
 
-=head2 funding_src
+=head2 collection_code
+
+  data_type: 'text'
+  is_nullable: 1
+
+=head2 inst
+
+  data_type: 'text'
+  is_nullable: 1
+
+=head2 taxid
 
   data_type: 'text'
   is_nullable: 1
@@ -110,6 +125,11 @@ __PACKAGE__->table("bold");
   data_type: 'text'
   is_nullable: 1
 
+=head2 tribe
+
+  data_type: 'text'
+  is_nullable: 1
+
 =head2 genus
 
   data_type: 'text'
@@ -125,12 +145,87 @@ __PACKAGE__->table("bold");
   data_type: 'text'
   is_nullable: 1
 
+=head2 species_reference
+
+  data_type: 'text'
+  is_nullable: 1
+
+=head2 identification
+
+  data_type: 'text'
+  is_nullable: 1
+
+=head2 identification_method
+
+  data_type: 'text'
+  is_nullable: 1
+
+=head2 identification_rank
+
+  data_type: 'text'
+  is_nullable: 1
+
 =head2 identified_by
 
   data_type: 'text'
   is_nullable: 1
 
+=head2 identifier_email
+
+  data_type: 'text'
+  is_nullable: 1
+
+=head2 taxonomy_notes
+
+  data_type: 'text'
+  is_nullable: 1
+
+=head2 sex
+
+  data_type: 'text'
+  is_nullable: 1
+
+=head2 reproduction
+
+  data_type: 'text'
+  is_nullable: 1
+
+=head2 life_stage
+
+  data_type: 'text'
+  is_nullable: 1
+
+=head2 short_note
+
+  data_type: 'text'
+  is_nullable: 1
+
+=head2 notes
+
+  data_type: 'text'
+  is_nullable: 1
+
 =head2 voucher_type
+
+  data_type: 'text'
+  is_nullable: 1
+
+=head2 tissue_type
+
+  data_type: 'text'
+  is_nullable: 1
+
+=head2 specimen_linkout
+
+  data_type: 'text'
+  is_nullable: 1
+
+=head2 associated_specimens
+
+  data_type: 'text'
+  is_nullable: 1
+
+=head2 associated_taxa
 
   data_type: 'text'
   is_nullable: 1
@@ -150,77 +245,38 @@ __PACKAGE__->table("bold");
   data_type: 'text'
   is_nullable: 1
 
-=head2 life_stage
+=head2 collection_event_id
 
   data_type: 'text'
   is_nullable: 1
 
-=head2 sex
+=head2 collection_time
 
   data_type: 'text'
   is_nullable: 1
 
-=head2 reproduction
+=head2 collection_notes
 
   data_type: 'text'
   is_nullable: 1
 
-=head2 extrainfo
+=head2 geoid
 
   data_type: 'text'
   is_nullable: 1
 
-=head2 notes
+=head2 country/ocean
 
+  accessor: 'country_ocean'
   data_type: 'text'
   is_nullable: 1
 
-=head2 coord
-
-  data_type: 'text'
-  is_nullable: 1
-
-=head2 coord_source
-
-  data_type: 'text'
-  is_nullable: 1
-
-=head2 coord_accuracy
-
-  data_type: 'text'
-  is_nullable: 1
-
-=head2 elev
-
-  data_type: 'text'
-  is_nullable: 1
-
-=head2 depth
-
-  data_type: 'text'
-  is_nullable: 1
-
-=head2 elev_accuracy
-
-  data_type: 'text'
-  is_nullable: 1
-
-=head2 depth_accuracy
-
-  data_type: 'text'
-  is_nullable: 1
-
-=head2 country
+=head2 country_iso
 
   data_type: 'text'
   is_nullable: 1
 
 =head2 province
-
-  data_type: 'text'
-  is_nullable: 1
-
-=head2 country_iso
 
   data_type: 'text'
   is_nullable: 1
@@ -240,7 +296,42 @@ __PACKAGE__->table("bold");
   data_type: 'text'
   is_nullable: 1
 
-=head2 collection_time
+=head2 site_code
+
+  data_type: 'text'
+  is_nullable: 1
+
+=head2 coord
+
+  data_type: 'text'
+  is_nullable: 1
+
+=head2 coord_accuracy
+
+  data_type: 'text'
+  is_nullable: 1
+
+=head2 coord_source
+
+  data_type: 'text'
+  is_nullable: 1
+
+=head2 elev
+
+  data_type: 'text'
+  is_nullable: 1
+
+=head2 elev_accuracy
+
+  data_type: 'text'
+  is_nullable: 1
+
+=head2 depth
+
+  data_type: 'text'
+  is_nullable: 1
+
+=head2 depth_accuracy
 
   data_type: 'text'
   is_nullable: 1
@@ -250,37 +341,27 @@ __PACKAGE__->table("bold");
   data_type: 'text'
   is_nullable: 1
 
-=head2 collection_note
+=head2 sampling_protocol
 
   data_type: 'text'
   is_nullable: 1
 
-=head2 associated_taxa
+=head2 nuc
 
   data_type: 'text'
   is_nullable: 1
 
-=head2 associated_specimen
+=head2 nuc_basecount
 
   data_type: 'text'
   is_nullable: 1
 
-=head2 species_reference
+=head2 insdc_acs
 
   data_type: 'text'
   is_nullable: 1
 
-=head2 identification_method
-
-  data_type: 'text'
-  is_nullable: 1
-
-=head2 recordset_code_arr
-
-  data_type: 'text'
-  is_nullable: 1
-
-=head2 gb_acs
+=head2 funding_src
 
   data_type: 'text'
   is_nullable: 1
@@ -290,7 +371,12 @@ __PACKAGE__->table("bold");
   data_type: 'text'
   is_nullable: 1
 
-=head2 nucraw
+=head2 primers_forward
+
+  data_type: 'text'
+  is_nullable: 1
+
+=head2 primers_reverse
 
   data_type: 'text'
   is_nullable: 1
@@ -300,17 +386,12 @@ __PACKAGE__->table("bold");
   data_type: 'text'
   is_nullable: 1
 
-=head2 processid_minted_date
-
-  data_type: 'text'
-  is_nullable: 1
-
 =head2 sequence_upload_date
 
   data_type: 'text'
   is_nullable: 1
 
-=head2 identification_rank
+=head2 recordset_code_arr
 
   data_type: 'text'
   is_nullable: 1
@@ -326,19 +407,25 @@ __PACKAGE__->add_columns(
   { data_type => "text", is_nullable => 1 },
   "sampleid",
   { data_type => "text", is_nullable => 1 },
-  "specimenid",
+  "fieldid",
   { data_type => "text", is_nullable => 1 },
   "museumid",
   { data_type => "text", is_nullable => 1 },
-  "fieldid",
+  "record_id",
   { data_type => "text", is_nullable => 1 },
-  "inst",
+  "specimenid",
+  { data_type => "text", is_nullable => 1 },
+  "processid_minted_date",
   { data_type => "text", is_nullable => 1 },
   "bin_uri",
   { data_type => "text", is_nullable => 1 },
-  "identification",
+  "bin_created_date",
   { data_type => "text", is_nullable => 1 },
-  "funding_src",
+  "collection_code",
+  { data_type => "text", is_nullable => 1 },
+  "inst",
+  { data_type => "text", is_nullable => 1 },
+  "taxid",
   { data_type => "text", is_nullable => 1 },
   "kingdom",
   { data_type => "text", is_nullable => 1 },
@@ -352,15 +439,47 @@ __PACKAGE__->add_columns(
   { data_type => "text", is_nullable => 1 },
   "subfamily",
   { data_type => "text", is_nullable => 1 },
+  "tribe",
+  { data_type => "text", is_nullable => 1 },
   "genus",
   { data_type => "text", is_nullable => 1 },
   "species",
   { data_type => "text", is_nullable => 1 },
   "subspecies",
   { data_type => "text", is_nullable => 1 },
+  "species_reference",
+  { data_type => "text", is_nullable => 1 },
+  "identification",
+  { data_type => "text", is_nullable => 1 },
+  "identification_method",
+  { data_type => "text", is_nullable => 1 },
+  "identification_rank",
+  { data_type => "text", is_nullable => 1 },
   "identified_by",
   { data_type => "text", is_nullable => 1 },
+  "identifier_email",
+  { data_type => "text", is_nullable => 1 },
+  "taxonomy_notes",
+  { data_type => "text", is_nullable => 1 },
+  "sex",
+  { data_type => "text", is_nullable => 1 },
+  "reproduction",
+  { data_type => "text", is_nullable => 1 },
+  "life_stage",
+  { data_type => "text", is_nullable => 1 },
+  "short_note",
+  { data_type => "text", is_nullable => 1 },
+  "notes",
+  { data_type => "text", is_nullable => 1 },
   "voucher_type",
+  { data_type => "text", is_nullable => 1 },
+  "tissue_type",
+  { data_type => "text", is_nullable => 1 },
+  "specimen_linkout",
+  { data_type => "text", is_nullable => 1 },
+  "associated_specimens",
+  { data_type => "text", is_nullable => 1 },
+  "associated_taxa",
   { data_type => "text", is_nullable => 1 },
   "collectors",
   { data_type => "text", is_nullable => 1 },
@@ -368,35 +487,19 @@ __PACKAGE__->add_columns(
   { data_type => "text", is_nullable => 1 },
   "collection_date_accuracy",
   { data_type => "text", is_nullable => 1 },
-  "life_stage",
+  "collection_event_id",
   { data_type => "text", is_nullable => 1 },
-  "sex",
+  "collection_time",
   { data_type => "text", is_nullable => 1 },
-  "reproduction",
+  "collection_notes",
   { data_type => "text", is_nullable => 1 },
-  "extrainfo",
+  "geoid",
   { data_type => "text", is_nullable => 1 },
-  "notes",
-  { data_type => "text", is_nullable => 1 },
-  "coord",
-  { data_type => "text", is_nullable => 1 },
-  "coord_source",
-  { data_type => "text", is_nullable => 1 },
-  "coord_accuracy",
-  { data_type => "text", is_nullable => 1 },
-  "elev",
-  { data_type => "text", is_nullable => 1 },
-  "depth",
-  { data_type => "text", is_nullable => 1 },
-  "elev_accuracy",
-  { data_type => "text", is_nullable => 1 },
-  "depth_accuracy",
-  { data_type => "text", is_nullable => 1 },
-  "country",
+  "country/ocean",
+  { accessor => "country_ocean", data_type => "text", is_nullable => 1 },
+  "country_iso",
   { data_type => "text", is_nullable => 1 },
   "province",
-  { data_type => "text", is_nullable => 1 },
-  "country_iso",
   { data_type => "text", is_nullable => 1 },
   "region",
   { data_type => "text", is_nullable => 1 },
@@ -404,35 +507,45 @@ __PACKAGE__->add_columns(
   { data_type => "text", is_nullable => 1 },
   "site",
   { data_type => "text", is_nullable => 1 },
-  "collection_time",
+  "site_code",
+  { data_type => "text", is_nullable => 1 },
+  "coord",
+  { data_type => "text", is_nullable => 1 },
+  "coord_accuracy",
+  { data_type => "text", is_nullable => 1 },
+  "coord_source",
+  { data_type => "text", is_nullable => 1 },
+  "elev",
+  { data_type => "text", is_nullable => 1 },
+  "elev_accuracy",
+  { data_type => "text", is_nullable => 1 },
+  "depth",
+  { data_type => "text", is_nullable => 1 },
+  "depth_accuracy",
   { data_type => "text", is_nullable => 1 },
   "habitat",
   { data_type => "text", is_nullable => 1 },
-  "collection_note",
+  "sampling_protocol",
   { data_type => "text", is_nullable => 1 },
-  "associated_taxa",
+  "nuc",
   { data_type => "text", is_nullable => 1 },
-  "associated_specimen",
+  "nuc_basecount",
   { data_type => "text", is_nullable => 1 },
-  "species_reference",
+  "insdc_acs",
   { data_type => "text", is_nullable => 1 },
-  "identification_method",
-  { data_type => "text", is_nullable => 1 },
-  "recordset_code_arr",
-  { data_type => "text", is_nullable => 1 },
-  "gb_acs",
+  "funding_src",
   { data_type => "text", is_nullable => 1 },
   "marker_code",
   { data_type => "text", is_nullable => 1 },
-  "nucraw",
+  "primers_forward",
+  { data_type => "text", is_nullable => 1 },
+  "primers_reverse",
   { data_type => "text", is_nullable => 1 },
   "sequence_run_site",
   { data_type => "text", is_nullable => 1 },
-  "processid_minted_date",
-  { data_type => "text", is_nullable => 1 },
   "sequence_upload_date",
   { data_type => "text", is_nullable => 1 },
-  "identification_rank",
+  "recordset_code_arr",
   { data_type => "text", is_nullable => 1 },
 );
 
@@ -486,8 +599,8 @@ __PACKAGE__->belongs_to(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07049 @ 2024-01-28 16:48:55
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:45HwEeCJQtIx6nkPrhfzdA
+# Created by DBIx::Class::Schema::Loader v0.07049 @ 2024-04-10 23:44:57
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:Zt1GLcUsA784ZVDTJnA9wA
 
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration
