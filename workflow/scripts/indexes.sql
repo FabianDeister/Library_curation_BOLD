@@ -12,7 +12,7 @@ CREATE INDEX IF NOT EXISTS "subfamily_idx" ON bold ("subfamily");
 CREATE INDEX IF NOT EXISTS "genus_idx" ON bold ("genus");
 CREATE INDEX IF NOT EXISTS "species_idx" ON bold ("species");
 CREATE INDEX IF NOT EXISTS "subspecies_idx" ON bold ("subspecies");
-CREATE INDEX IF NOT EXISTS "gb_acs_idx" ON bold ("gb_acs");
+CREATE INDEX IF NOT EXISTS "insdc_acs_idx" ON bold ("insdc_acs");
 CREATE INDEX IF NOT EXISTS "marker_code_idx" ON bold ("marker_code");
 CREATE INDEX IF NOT EXISTS "voucher_type_idx" ON bold ("voucher_type");
 CREATE INDEX IF NOT EXISTS "identified_by_idx" ON bold ("identified_by");
@@ -20,7 +20,7 @@ CREATE INDEX IF NOT EXISTS "identification_rank_idx" ON bold ("identification_ra
 CREATE INDEX IF NOT EXISTS "identification_method_idx" ON bold ("identification_method");
 CREATE INDEX IF NOT EXISTS "taxonid_idx" ON bold ("taxonid");
 CREATE INDEX IF NOT EXISTS "notes_idx" ON bold ("notes");
-CREATE INDEX IF NOT EXISTS "extrainfo_idx" ON bold ("extrainfo");
+-- CREATE INDEX IF NOT EXISTS "extrainfo_idx" ON bold ("extrainfo"); -- TODO what did this change into?
 
 -- indexes on the targets table
 CREATE INDEX IF NOT EXISTS "target_name_idx" on targets ("name");
@@ -31,7 +31,7 @@ CREATE INDEX IF NOT EXISTS "synonym_name_idx" on synonyms ("name");
 CREATE INDEX IF NOT EXISTS "targetid_idx" on synonyms ("targetid");
 
 -- indexes on the taxa table
-CREATE INDEX IF NOT EXISTS "level_idx" on taxa ("levels");
+CREATE INDEX IF NOT EXISTS "level_idx" on taxa ("level");
 CREATE INDEX IF NOT EXISTS "taxa_name_idx" on taxa ("name");
 CREATE INDEX IF NOT EXISTS "kingdom_idx" on taxa ("kingdom");
 CREATE INDEX IF NOT EXISTS "full_idx" on taxa ("kingdom","level","name");
