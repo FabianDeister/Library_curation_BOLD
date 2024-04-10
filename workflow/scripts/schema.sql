@@ -6,7 +6,7 @@
 CREATE TABLE IF NOT EXISTS "bold"(
     "recordid" INTEGER PRIMARY KEY,
     "taxonid" INTEGER, -- index, foreign key
-    "processed" TEXT,
+    "processid" TEXT,
     "sampleid" TEXT,
     "fielded" TEXT,
     "museumid" TEXT,
