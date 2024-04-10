@@ -38,7 +38,7 @@ CREATE TABLE IF NOT EXISTS "bold"(
     "sex" TEXT,
     "reproduction" TEXT,
     "life_stage" TEXT,
-    "short_notnotes" TEXT,
+    "short_notes" TEXT,
     "voucher_type" TEXT,
     "tissue_type" TEXT,
     "specimen_linkout" TEXT,
