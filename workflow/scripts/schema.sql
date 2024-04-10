@@ -8,7 +8,7 @@ CREATE TABLE IF NOT EXISTS "bold"(
     "taxonid" INTEGER, -- index, foreign key
     "processid" TEXT,
     "sampleid" TEXT,
-    "fielded" TEXT,
+    "fieldid" TEXT,
     "museumid" TEXT,
     "record_id" TEXT,
     "specimenid" TEXT,
