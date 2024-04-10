@@ -15,4 +15,5 @@ dependencies:
   - perl-json
   - perl-libwww-perl
   - perl-lwp-protocol-https
+  - perl-dbd-sqlite
   - hmmer
