@@ -24,7 +24,7 @@ CREATE INDEX IF NOT EXISTS "notes_idx" ON bold ("notes");
 
 -- indexes on the targets table
 CREATE INDEX IF NOT EXISTS "target_name_idx" on targets ("name");
-CREATE INDEX IF NOT EXISTS "targetlist_idx" on targets ("targetlist")
+CREATE INDEX IF NOT EXISTS "targetlist_idx" on targets ("targetlist");
 
 -- indexes on the synonyms table
 CREATE INDEX IF NOT EXISTS "synonym_name_idx" on synonyms ("name");
