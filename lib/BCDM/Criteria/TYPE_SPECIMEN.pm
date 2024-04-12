@@ -35,7 +35,7 @@ sub _assess {
     # or as an object created by BCDM::IO. For example, a blessed hash reference created by
     # Text::CSV from a line in a text table.
     my $rid = $record->recordid;
-    for my $field ( qw(extrainfo voucher_type notes) ) {
+    for my $field ( qw(collection_notes voucher_type notes) ) {
         for my $type ( @types ) {
             if ( $record->$field =~ /$type/i ) {
                 $matches++;
