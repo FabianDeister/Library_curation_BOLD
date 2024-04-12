@@ -43,7 +43,25 @@ perl -I${LIBS} load_taxonomy.pl --db=$DB_FILE --log=INFO
 
 # Here the script to assess criteria. Possibly the
 # same script is invoked by multiple, separate Snakefile
-# rules, e.g. one for each criterion.
+# rules, e.g. one for each criterion:
+# COLLECTION_DATE
+# COLLECTORS
+# COORD
+# COUNTRY
+# HAS_IMAGE
+# IDENTIFIER
+# ID_METHOD
+# INSTITUTION
+# MUSEUM_ID
+# PUBLIC_VOUCHER
+# SEQ_QUALITY
+# SITE
+# SPECIES_ID
+# TYPE_SPECIMEN
+perl -I${LIBS} assess_criteria.pl \
+  --db=$DB_FILE \
+  --log=INFO \
+  --criteria=COLLECTION_DATE
 
 # Possibly there will be a need to aggregate and
 # summarise the outcomes from the different criteria
