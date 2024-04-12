@@ -24,7 +24,7 @@ sub _assess {
     my $record  = shift;
     my $logger  = $package->_get_logger(__PACKAGE__, 'INFO');
     my $bin_uri = $record->bin_uri;
-    my $nucraw  = $record->nucraw;
+    my $nucraw  = $record->nuc;
 
     # remove leading and trailing non-ACGT characters
     $logger->debug('Removing leading/trailing non-ACGT characters');
