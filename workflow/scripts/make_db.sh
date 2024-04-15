@@ -58,10 +58,13 @@ perl -I${LIBS} load_taxonomy.pl --db=$DB_FILE --log=INFO
 # SITE
 # SPECIES_ID
 # TYPE_SPECIMEN
-perl -I${LIBS} assess_criteria.pl \
-  --db=$DB_FILE \
-  --log=INFO \
-  --criteria=COLLECTION_DATE
+CRITERIA="COLLECTION_DATE COLLECTORS COORD COUNTRY HAS_IMAGE IDENTIFIER ID_METHOD INSTITUTION MUSEUM_ID PUBLIC_VOUCHER SEQ_QUALITY SITE SPECIES_ID TYPE_SPECIMEN"
+for C in $CRITERIA; do
+	perl -I${LIBS} assess_criteria.pl \
+		--db=$DB_FILE \
+		--log=INFO \
+		--criteria=${C} 2> ${C}.log > ${C}.tsv
+done
 
 # Possibly there will be a need to aggregate and
 # summarise the outcomes from the different criteria
