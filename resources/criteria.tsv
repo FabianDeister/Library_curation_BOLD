@@ -10,5 +10,5 @@
 10	COUNTRY	Specimen has a known collection country
 11	SITE	Specimen has a known collection site
 12	COORD	Specimen has known collection coordinates
-13  INSTITUTION  Specimen is held in a public institution
-14  MUSEUM_ID  Specimen is held in a named museum
+13	INSTITUTION	Specimen is held in a public institution
+14	MUSEUM_ID	Specimen is held in a named museum
