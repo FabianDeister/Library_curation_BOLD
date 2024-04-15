@@ -1,4 +1,3 @@
-criterionid	name	description
 1	SPECIES_ID	Specimen was identified to species rank
 2	TYPE_SPECIMEN	Specimen is a type specimen
 3	SEQ_QUALITY	Sequence is long, with few ambiguities
@@ -11,3 +10,5 @@ criterionid	name	description
 10	COUNTRY	Specimen has a known collection country
 11	SITE	Specimen has a known collection site
 12	COORD	Specimen has known collection coordinates
+13  INSTITUTION  Specimen is held in a public institution
+14  MUSEUM_ID  Specimen is held in a named museum
