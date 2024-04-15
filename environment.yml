@@ -17,3 +17,6 @@ dependencies:
   - perl-lwp-protocol-https
   - perl-dbd-sqlite
   - hmmer
+  - jq
+  - curl
+
