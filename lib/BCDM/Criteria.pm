@@ -19,6 +19,7 @@ our $COUNTRY=10;        # 454.66s user 8.69s system 96% cpu 8:01.04 total
 our $SITE=11;           # 466.81s user 9.39s system 94% cpu 8:21.46 total
 our $COORD=12;          # 451.98s user 7.73s system 96% cpu 7:55.33 total
 our $INSTITUTION=13;
+our $MUSEUM_ID=14;
 
 # Initialize Log::Log4perl
 Log::Log4perl->init(\<<"END");
