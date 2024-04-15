@@ -18,6 +18,7 @@ our $COLLECTION_DATE=9; # 516.87s user 14.21s system 93% cpu 9:27.06 total
 our $COUNTRY=10;        # 454.66s user 8.69s system 96% cpu 8:01.04 total
 our $SITE=11;           # 466.81s user 9.39s system 94% cpu 8:21.46 total
 our $COORD=12;          # 451.98s user 7.73s system 96% cpu 7:55.33 total
+our $INSTITUTION=13;
 
 # Initialize Log::Log4perl
 Log::Log4perl->init(\<<"END");
