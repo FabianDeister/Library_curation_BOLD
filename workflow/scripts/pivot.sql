@@ -1,3 +1,12 @@
+-- To execute me on the database to produce a TSV file, do:
+-- $ sqlite3 mydatabase.db
+-- sqlite> .headers ON
+-- sqlite> .mode tabs
+-- sqlite> .output result_output.tsv
+-- sqlite> .read pivot.sql
+-- sqlite> .quit
+
+
 SELECT
   b.*,
   MAX(CASE WHEN c.name = 'SPECIES_ID' THEN CASE bc.status WHEN 1 THEN 'pass' ELSE 'fail' END END) AS "SPECIES_ID",
