@@ -1,4 +1,3 @@
-criterionid	name	description
 1	SPECIES_ID	Specimen was identified to species rank
 2	TYPE_SPECIMEN	Specimen is a type specimen
 3	SEQ_QUALITY	Sequence is long, with few ambiguities
