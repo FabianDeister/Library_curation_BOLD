@@ -1,6 +1,14 @@
+configfile: "../config/config.yaml"
+
 envvars:
 
 rule load_bcdm:
     input:
     output:
-    shell: perl load_bcdm.pl 
+    shell: "perl load_bcdm.pl" 
+
+
+rule sqlite3:
+
+
+rule assess_criteria:    
