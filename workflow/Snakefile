@@ -1,0 +1,6 @@
+envvars:
+
+rule load_bcdm:
+    input:
+    output:
+    shell: perl load_bcdm.pl 
