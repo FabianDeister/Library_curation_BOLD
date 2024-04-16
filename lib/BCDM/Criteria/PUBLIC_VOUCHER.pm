@@ -58,7 +58,7 @@ sub _assess {
     # Check positive matches
     my @mp;
     for my $pattern ( @pos ) {
-         if ( $method =~ /$pattern/ ) {
+         if ( $method =~ /.*$pattern.*/ ) {
             push @mp, $pattern;
             $log->info("Positive match for $id: $pattern")
         }
@@ -67,7 +67,7 @@ sub _assess {
     # Check negative matches
     my @mn;
     for my $pattern ( @neg ) {
-         if ( $method =~ /$pattern/ ) {
+         if ( $method =~ /.*$pattern.*/ ) {
             push @mn, $pattern;
             $log->info("Negative match for $id: $pattern")
         }
