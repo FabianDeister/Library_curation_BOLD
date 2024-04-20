@@ -17,7 +17,7 @@ sub _assess {
     my $record = shift;
 
 # Check if the 'species' column contains any value
-    return (length($record->species) > 0) ? 1 : 0, "Determined from species column, not identification_rank";
+    return ($record->species =~ /^\s*$/) ? (0, "Determined from blank species column") : (1, "Determined from species column");
     }
 
 1;
