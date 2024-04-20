@@ -35,7 +35,7 @@ sub _assess {
     # or as an object created by BCDM::IO. For example, a blessed hash reference created by
     # Text::CSV from a line in a text table.
     my $rid = $record->recordid;
-    for my $field ( qw(collection_notes voucher_type notes) ) {
+    for my $field ( qw(taxonomy_notes short_note collection_notes voucher_type notes) ) {
         for my $type ( @types ) {
             if ( $record->$field =~ /$type/i ) {
                 $matches++;
@@ -51,7 +51,7 @@ sub _assess {
 
     # The return value consists of two parts, here separated by commas. The first part is the
     # outcome of the ternary operator, either 0 or 1. The second part is the quoted message.
-    return $matches > 0 ? 1 : 0, "By matching '@types' against extrainfo, voucher_type, notes and voucher_type against /type/i";
+    return $matches > 0 ? 1 : 0, "By matching '@types' against taxonomy_notes, short_note, collection_notes, voucher_type, notes OR voucher_type against /type/i";
 }
 
 1;
