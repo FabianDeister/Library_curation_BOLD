@@ -13,7 +13,8 @@ sub _criterion { $BCDM::Criteria::SITE }
 sub _assess {
     my $package = shift;
     my $record = shift;
-    return $record->site eq 'None' ? 0 : 1, "Determined from site column";
+    return ($record->site =~ /^\s*$/) ? (0, "Determined from blank site column") : (1, "Determined from site column");
+    # original: return $record->site eq 'None' ? 0 : 1, "Determined from site column";
 }
 
 1;
