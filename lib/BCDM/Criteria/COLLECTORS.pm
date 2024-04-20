@@ -13,7 +13,7 @@ sub _criterion { $BCDM::Criteria::COLLECTORS }
 sub _assess {
     my $package = shift;
     my $record = shift;
-    return $record->collectors eq 'None' ? 0 : 1, "Determined from collectors column";
+    return $record->collectors eq '' ? 0 : 1, "Determined from collectors column";
 }
 
 1;
