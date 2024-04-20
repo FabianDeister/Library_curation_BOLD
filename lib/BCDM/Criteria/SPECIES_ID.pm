@@ -15,7 +15,9 @@ sub _criterion { $BCDM::Criteria::SPECIES_ID }
 sub _assess {
     my $package = shift;
     my $record = shift;
-    return $record->species eq 'None' ? 0 : 1, "Determined from species column, not identification_rank";
-}
+
+# Check if the 'species' column contains any value
+    return (length($record->species) > 0) ? 1 : 0, "Determined from species column, not identification_rank";
+    }
 
 1;
