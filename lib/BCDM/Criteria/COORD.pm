@@ -13,7 +13,7 @@ sub _criterion { $BCDM::Criteria::COORD }
 sub _assess {
     my $package = shift;
     my $record = shift;
-    return $record->coord eq 'None' ? 0 : 1, "Determined from coord column";
+    return $record->coord eq '' ? 0 : 1, "Determined from coord column";
 }
 
 1;
