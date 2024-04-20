@@ -25,7 +25,7 @@ sub _assess {
     my $record = shift;
     my $identifier = $record->identified_by;
 
-    # known entity not considered an export
+    # known entity not considered an expert
     if ( $cbg{$identifier} ) {
         return 0, "identified_by: '$identifier'";
     }
