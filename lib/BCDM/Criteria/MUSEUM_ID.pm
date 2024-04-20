@@ -13,7 +13,8 @@ sub _criterion { $BCDM::Criteria::MUSEUM_ID }
 sub _assess {
     my $package = shift;
     my $record = shift;
-    return $record->museumid eq 'None' ? 0 : 1, "Determined from museumid column";
+# original search: return $record->museumid eq 'None' ? 0 : 1, "Determined from museumid column";
+    return ($record->museumid =~ /^\s*$/) ? (0, "Determined from blank museumid column") : (1, "Determined from museumid column");
 }
 
 1;
