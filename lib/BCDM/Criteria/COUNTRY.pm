@@ -13,7 +13,7 @@ sub _criterion { $BCDM::Criteria::COUNTRY }
 sub _assess {
     my $package = shift;
     my $record = shift;
-    return $record->country_ocean eq 'None' ? 0 : 1, "Determined from country column";
+    return $record->country_ocean eq '' ? 0 : 1, "Determined from country column";
 }
 
 1;
