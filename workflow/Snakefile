@@ -24,6 +24,7 @@ rule target:
         "../results/assessed_SITE.tsv",
         "../results/assessed_SPECIES_ID.tsv",
         "../results/assessed_TYPE_SPECIMEN.tsv",
+        "../results/taxonomy_loaded.txt",
         config["DB_FILE_INDEXED"]
         
 
@@ -60,13 +61,12 @@ rule produce_orm:
 # Rule for loading taxonomy into the database
 rule load_taxonomy:
     input:
-        perl_script="scripts/load_taxonomy.pl",
         db=config["DB_FILE"]
     output:
-        taxonomy_loaded="../results/taxonomy_loaded.txt"
+        touch("../results/taxonomy_loaded.txt")
     shell:
         """
-        perl {input.perl_script} --db {input.db} --log INFO && touch {output}
+        perl -I../lib scripts/load_taxonomy.pl --db {input.db} --log INFO
         """
 
 # Rule for importing the target list and mapping to taxonomy
@@ -336,6 +336,7 @@ rule output_filtered_data:
         site="../results/assessed_SITE.tsv",
         spec_id="../results/assessed_SPECIES_ID.tsv",
         type="../results/assessed_TYPE_SPECIMEN.tsv",
+        tyxonomy="../results/taxonomy_loaded.txt",
     output:
         "../results/result_output.tsv"
     shell:
