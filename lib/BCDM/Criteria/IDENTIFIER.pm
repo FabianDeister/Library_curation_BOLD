@@ -8,7 +8,7 @@ my %cbg = (
     'Kate Perez'     => 1,
     'Angela Telfer'  => 1,
     'BOLD ID Engine' => 1,
-    'None'           => 1,
+    ''               => 1,
 );
 
 # this so that we know the criterionid for
