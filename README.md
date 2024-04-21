@@ -60,5 +60,5 @@ Follow the installation instructions above. Navigate to the directory "workflow"
 ```{shell}
 snakemake -p -c {number of cores} target
 ```
-
+modify config.yml to define input data.
 
