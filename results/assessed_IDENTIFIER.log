@@ -1,5 +1,0 @@
-INFO - Going to assess criteria: IDENTIFIER
-INFO - Going to connect to database ../results/bold.db
-INFO - Going to connect to database ../results/bold.db
-INFO - Attempting to load 'IDENTIFIER'
-INFO - Loaded implementation IDENTIFIER => BCDM::Criteria::IDENTIFIER

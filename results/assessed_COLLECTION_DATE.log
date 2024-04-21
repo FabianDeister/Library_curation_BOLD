@@ -1,5 +1,0 @@
-INFO - Going to assess criteria: COLLECTION_DATE
-INFO - Going to connect to database ../results/bold.db
-INFO - Going to connect to database ../results/bold.db
-INFO - Attempting to load 'COLLECTION_DATE'
-INFO - Loaded implementation COLLECTION_DATE => BCDM::Criteria::COLLECTION_DATE

@@ -1,5 +1,0 @@
-INFO - Going to assess criteria: COORD
-INFO - Going to connect to database ../results/bold.db
-INFO - Going to connect to database ../results/bold.db
-INFO - Attempting to load 'COORD'
-INFO - Loaded implementation COORD => BCDM::Criteria::COORD

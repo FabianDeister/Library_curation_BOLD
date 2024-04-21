@@ -1,5 +1,0 @@
-INFO - Going to assess criteria: COLLECTORS
-INFO - Going to connect to database ../results/bold.db
-INFO - Going to connect to database ../results/bold.db
-INFO - Attempting to load 'COLLECTORS'
-INFO - Loaded implementation COLLECTORS => BCDM::Criteria::COLLECTORS
