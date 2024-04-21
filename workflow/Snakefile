@@ -1,14 +1,352 @@
-configfile: "../config/config.yaml"
+# Import necessary modules
+import os
 
-envvars:
+# Read configuration file
+configfile: "../config/config.yml"
 
-rule load_bcdm:
+
+
+rule target:
+    input: 
+        config["DB_FILE"],
+        "../results/result_output.tsv",
+        "../results/assessed_COLLECTORS.tsv",
+        "../results/assessed_COLLECTION_DATE.tsv",
+        "../results/assessed_COORD.tsv",
+        "../results/assessed_COUNTRY.tsv",
+        "../results/assessed_HAS_IMAGE.tsv",
+        "../results/assessed_IDENTIFIER.tsv",
+        "../results/assessed_ID_METHOD.tsv",
+        "../results/assessed_INSTITUTION.tsv",
+        "../results/assessed_MUSEUM_ID.tsv",
+        "../results/assessed_PUBLIC_VOUCHER.tsv",
+        "../results/assessed_SEQ_QUALITY.tsv",
+        "../results/assessed_SITE.tsv",
+        "../results/assessed_SPECIES_ID.tsv",
+        "../results/assessed_TYPE_SPECIMEN.tsv",
+        config["DB_FILE_INDEXED"]
+        
+
+# Rule for creating the database and loading BCDM
+rule create_load_db:
     input:
+        bold_tsv=config["BOLD_TSV"],
+        schema=config["SCHEMA"]
     output:
-    shell: "perl load_bcdm.pl" 
+        touch(config["DB_FILE"])
+    shell:
+        "perl scripts/load_bcdm.pl --tsv {input.bold_tsv} --db {output} --sql {input.schema} --log INFO --force"
 
+# Rule for applying indexes to the database
+rule apply_indexes:
+    input:
+        indexes=config["INDEXES"],
+        db=config["DB_FILE"]
+    output:
+        touch(config["DB_FILE_INDEXED"])
+    shell:
+        """
+        sqlite3 {input.db} < {input.indexes} && touch {output}
+        """
+# Rule for producing the object-relational mapping
+rule produce_orm:
+    output:
+        directory="../lib"
+    shell:
+        """
+        dbicdump -o dump_directory=../lib BCDM::ORM 'dbi:SQLite:dbname={config["DB_FILE"]}'
+        """
 
-rule sqlite3:
+# Rule for loading taxonomy into the database
+rule load_taxonomy:
+    input:
+        perl_script="scripts/load_taxonomy.pl",
+        db=config["DB_FILE"]
+    output:
+        taxonomy_loaded="../results/taxonomy_loaded.txt"
+    shell:
+        """
+        perl {input.perl_script} --db {input.db} --log INFO && touch {output}
+        """
 
+# Rule for importing the target list and mapping to taxonomy
+rule import_target_list_perl:
+    input:
+        perl_script="scripts/load_targetlist.pl",
+        targetlist="../resources/all_specs_and_syn.csv",
+        db="../results/bold.db"
+    output:
+        target="target_loaded.txt"
+    shell:
+        """
+        perl {input.perl_script} \\
+            --list {input.targetlist} \\
+            --db {input.db} \\
+            --log KINGDOM \\
+            --project {config[PROJECT_NAME]} \\
+            --taxon {config[TAXON_LEVEL]} \\
+            --kingdom {config[KINGDOM]} 
+        """
 
-rule assess_criteria:    
+# Rules for assessing criteria
+# COLLECTION_DATE
+rule COLLECTION_DATE:
+    input:
+        script="scripts/assess_criteria.pl",
+        db="../results/bold.db"
+    output:
+        tsv="../results/assessed_COLLECTION_DATE.tsv",
+        log="../results/assessed_COLLECTION_DATE.log"
+    shell:
+        """
+        perl -I../lib {input.script} \\
+            --db {input.db} \\
+            --log INFO \\
+            --criteria COLLECTION_DATE \\
+            2> {output.log} > {output.tsv}
+        """
+
+# COLLECTORS
+rule COLLECTORS:
+    input:
+        script="scripts/assess_criteria.pl",
+        db="../results/bold.db"
+    output:
+        tsv="../results/assessed_COLLECTORS.tsv",
+        log="../results/assessed_COLLECTORS.log"
+    shell:
+        """
+        perl -I../lib {input.script} \\
+            --db {input.db} \\
+            --log INFO \\
+            --criteria COLLECTORS \\
+            2> {output.log} > {output.tsv}
+        """
+
+# COORD
+rule COORD:
+    input:
+        script="scripts/assess_criteria.pl",
+        db="../results/bold.db"
+    output:
+        tsv="../results/assessed_COORD.tsv",
+        log="../results/assessed_COORD.log"
+    shell:
+        """
+        perl -I../lib {input.script} \\
+            --db {input.db} \\
+            --log INFO \\
+            --criteria COORD \\
+            2> {output.log} > {output.tsv}
+        """
+# COUNTRY
+rule COUNTRY:
+    input:
+        script="scripts/assess_criteria.pl",
+        db="../results/bold.db"
+    output:
+        tsv="../results/assessed_COUNTRY.tsv",
+        log="../results/assessed_COUNTRY.log"
+    shell:
+        """
+        perl -I../lib {input.script} \\
+            --db {input.db} \\
+            --log INFO \\
+            --criteria COUNTRY \\
+            2> {output.log} > {output.tsv}
+        """
+# HAS_IMAGE  
+rule HAS_IMAGE:
+    input:
+        script="scripts/assess_criteria.pl",
+        db="../results/bold.db"
+    output:
+        tsv="../results/assessed_HAS_IMAGE.tsv",
+        log="../results/assessed_HAS_IMAGE.log"
+    shell:
+        """
+        perl -I../lib {input.script} \\
+            --db {input.db} \\
+            --log INFO \\
+            --criteria HAS_IMAGE \\
+            2> {output.log} > {output.tsv}
+        """
+
+# IDENTIFIER  
+rule IDENTIFIER:
+    input:
+        script="scripts/assess_criteria.pl",
+        db="../results/bold.db"
+    output:
+        tsv="../results/assessed_IDENTIFIER.tsv",
+        log="../results/assessed_IDENTIFIER.log"
+    shell:
+        """
+        perl -I../lib {input.script} \\
+            --db {input.db} \\
+            --log INFO \\
+            --criteria IDENTIFIER \\
+            2> {output.log} > {output.tsv}
+        """     
+# ID_METHOD  
+rule ID_METHOD:
+    input:
+        script="scripts/assess_criteria.pl",
+        db="../results/bold.db"
+    output:
+        tsv="../results/assessed_ID_METHOD.tsv",
+        log="../results/assessed_ID_METHOD.log"
+    shell:
+        """
+        perl -I../lib {input.script} \\
+            --db {input.db} \\
+            --log INFO \\
+            --criteria ID_METHOD \\
+            2> {output.log} > {output.tsv}
+        """
+# INSTITUTION  
+rule INSTITUTION:
+    input:
+        script="scripts/assess_criteria.pl",
+        db="../results/bold.db"
+    output:
+        tsv="../results/assessed_INSTITUTION.tsv",
+        log="../results/assessed_INSTITUTION.log"
+    shell:
+        """
+        perl -I../lib {input.script} \\
+            --db {input.db} \\
+            --log INFO \\
+            --criteria INSTITUTION \\
+            2> {output.log} > {output.tsv}
+        """
+# MUSEUM_ID  
+rule MUSEUM_ID:
+    input:
+        script="scripts/assess_criteria.pl",
+        db="../results/bold.db"
+    output:
+        tsv="../results/assessed_MUSEUM_ID.tsv",
+        log="../results/assessed_MUSEUM_ID.log"
+    shell:
+        """
+        perl -I../lib {input.script} \\
+            --db {input.db} \\
+            --log INFO \\
+            --criteria INSTITUTION \\
+            2> {output.log} > {output.tsv}
+        """
+# PUBLIC_VOUCHER
+rule PUBLIC_VOUCHER:
+    input:
+        script="scripts/assess_criteria.pl",
+        db="../results/bold.db"
+    output:
+        tsv="../results/assessed_PUBLIC_VOUCHER.tsv",
+        log="../results/assessed_PUBLIC_VOUCHER.log"
+    shell:
+        """
+        perl -I../lib {input.script} \\
+            --db {input.db} \\
+            --log INFO \\
+            --criteria PUBLIC_VOUCHER \\
+            2> {output.log} > {output.tsv}
+        """
+# SEQ_QUALITY
+rule SEQ_QUALITY:
+    input:
+        script="scripts/assess_criteria.pl",
+        db="../results/bold.db"
+    output:
+        tsv="../results/assessed_SEQ_QUALITY.tsv",
+        log="../results/assessed_SEQ_QUALITY.log"
+    shell:
+        """
+        perl -I../lib {input.script} \\
+            --db {input.db} \\
+            --log INFO \\
+            --criteria SEQ_QUALITY \\
+            2> {output.log} > {output.tsv}
+        """
+# SITE 
+rule SITE:
+    input:
+        script="scripts/assess_criteria.pl",
+        db="../results/bold.db"
+    output:
+        tsv="../results/assessed_SITE.tsv",
+        log="../results/assessed_SITE.log"
+    shell:
+        """
+        perl -I../lib {input.script} \\
+            --db {input.db} \\
+            --log INFO \\
+            --criteria SITE \\
+            2> {output.log} > {output.tsv}
+        """
+#SPECIES_ID
+rule SPECIES_ID:
+    input:
+        script="scripts/assess_criteria.pl",
+        db="../results/bold.db"
+    output:
+        tsv="../results/assessed_SPECIES_ID.tsv",
+        log="../results/assessed_SPECIES_ID.log"
+    shell:
+        """
+        perl -I../lib {input.script} \\
+            --db {input.db} \\
+            --log INFO \\
+            --criteria SPECIES_ID \\
+            2> {output.log} > {output.tsv}
+        """
+# TYPE_SPECIMEN
+rule TYPE_SPECIMEN:
+    input:
+        script="scripts/assess_criteria.pl",
+        db="../results/bold.db"
+    output:
+        tsv="../results/assessed_TYPE_SPECIMEN.tsv",
+        log="../results/assessed_TYPE_SPECIMEN.log"
+    shell:
+        """
+        perl -I../lib {input.script} \\
+            --db {input.db} \\
+            --log INFO \\
+            --criteria TYPE_SPECIMEN \\
+            2> {output.log} > {output.tsv}
+        """
+# Rule for outputting filtered data in BCDM        
+rule output_filtered_data:
+    input:
+        pivot_query="scripts/pivot.sql",
+        db="../results/bold.db",
+        indexed=config["DB_FILE_INDEXED"],
+        collectors="../results/assessed_COLLECTORS.tsv",
+        date="../results/assessed_COLLECTION_DATE.tsv",
+        coord="../results/assessed_COORD.tsv",
+        country="../results/assessed_COUNTRY.tsv",
+        image="../results/assessed_HAS_IMAGE.tsv",
+        identifier="../results/assessed_IDENTIFIER.tsv",
+        method="../results/assessed_ID_METHOD.tsv",
+        institurion="../results/assessed_INSTITUTION.tsv",
+        museums_id="../results/assessed_MUSEUM_ID.tsv",
+        voucher="../results/assessed_PUBLIC_VOUCHER.tsv",
+        quality="../results/assessed_SEQ_QUALITY.tsv",
+        site="../results/assessed_SITE.tsv",
+        spec_id="../results/assessed_SPECIES_ID.tsv",
+        type="../results/assessed_TYPE_SPECIMEN.tsv",
+    output:
+        "../results/result_output.tsv"
+    shell:
+        """
+        sqlite3 {input.db} <<EOF
+.headers ON
+.mode tabs
+.output {output}
+.read {input.pivot_query}
+.quit
+EOF
+        """
+
+    

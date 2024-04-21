@@ -1,0 +1,206 @@
+Building DAG of jobs...
+Using shell: /usr/bin/bash
+Provided cores: 8
+Rules claiming more threads will be scaled down.
+Job stats:
+job                     count
+--------------------  -------
+COLLECTION_DATE             1
+COLLECTORS                  1
+COORD                       1
+COUNTRY                     1
+HAS_IMAGE                   1
+IDENTIFIER                  1
+ID_METHOD                   1
+INSTITUTION                 1
+MUSEUM_ID                   1
+PUBLIC_VOUCHER              1
+SEQ_QUALITY                 1
+SITE                        1
+SPECIES_ID                  1
+TYPE_SPECIMEN               1
+apply_indexes               1
+create_load_db              1
+output_filtered_data        1
+target                      1
+total                      18
+
+Select jobs to execute...
+Execute 1 jobs...
+
+[Sun Apr 21 14:52:29 2024]
+localrule create_load_db:
+    input: ../resources/BOLD_test.tsv, scripts/schema.sql
+    output: ../results/bold.db
+    jobid: 1
+    reason: Missing output files: ../results/bold.db
+    resources: tmpdir=/tmp
+
+perl scripts/load_bcdm.pl --tsv ../resources/BOLD_test.tsv --db ../results/bold.db --sql scripts/schema.sql --log INFO --force
+Touching output file ../results/bold.db.
+[Sun Apr 21 14:53:00 2024]
+Finished job 1.
+1 of 18 steps (6%) done
+Select jobs to execute...
+Execute 8 jobs...
+
+[Sun Apr 21 14:53:00 2024]
+localrule apply_indexes:
+    input: scripts/indexes.sql, ../results/bold.db
+    output: ../results/bold_indexed.db
+    jobid: 3
+    reason: Missing output files: ../results/bold_indexed.db; Input files updated by another job: ../results/bold.db
+    resources: tmpdir=/tmp
+
+
+        sqlite3 ../results/bold.db < scripts/indexes.sql && touch ../results/bold_indexed.db
+        
+
+[Sun Apr 21 14:53:00 2024]
+localrule COLLECTION_DATE:
+    input: scripts/assess_criteria.pl, ../results/bold.db
+    output: ../results/assessed_COLLECTION_DATE.tsv, ../results/assessed_COLLECTION_DATE.log
+    jobid: 5
+    reason: Missing output files: ../results/assessed_COLLECTION_DATE.tsv; Input files updated by another job: ../results/bold.db
+    resources: tmpdir=/tmp
+
+
+        perl -I../lib scripts/assess_criteria.pl \
+            --db ../results/bold.db \
+            --log INFO \
+            --criteria COLLECTION_DATE \
+            2> ../results/assessed_COLLECTION_DATE.log > ../results/assessed_COLLECTION_DATE.tsv
+        
+
+[Sun Apr 21 14:53:00 2024]
+localrule ID_METHOD:
+    input: scripts/assess_criteria.pl, ../results/bold.db
+    output: ../results/assessed_ID_METHOD.tsv, ../results/assessed_ID_METHOD.log
+    jobid: 10
+    reason: Missing output files: ../results/assessed_ID_METHOD.tsv; Input files updated by another job: ../results/bold.db
+    resources: tmpdir=/tmp
+
+
+        perl -I../lib scripts/assess_criteria.pl \
+            --db ../results/bold.db \
+            --log INFO \
+            --criteria ID_METHOD \
+            2> ../results/assessed_ID_METHOD.log > ../results/assessed_ID_METHOD.tsv
+        
+
+[Sun Apr 21 14:53:00 2024]
+localrule TYPE_SPECIMEN:
+    input: scripts/assess_criteria.pl, ../results/bold.db
+    output: ../results/assessed_TYPE_SPECIMEN.tsv, ../results/assessed_TYPE_SPECIMEN.log
+    jobid: 17
+    reason: Missing output files: ../results/assessed_TYPE_SPECIMEN.tsv; Input files updated by another job: ../results/bold.db
+    resources: tmpdir=/tmp
+
+
+        perl -I../lib scripts/assess_criteria.pl \
+            --db ../results/bold.db \
+            --log INFO \
+            --criteria TYPE_SPECIMEN \
+            2> ../results/assessed_TYPE_SPECIMEN.log > ../results/assessed_TYPE_SPECIMEN.tsv
+        
+
+[Sun Apr 21 14:53:00 2024]
+localrule COUNTRY:
+    input: scripts/assess_criteria.pl, ../results/bold.db
+    output: ../results/assessed_COUNTRY.tsv, ../results/assessed_COUNTRY.log
+    jobid: 7
+    reason: Missing output files: ../results/assessed_COUNTRY.tsv; Input files updated by another job: ../results/bold.db
+    resources: tmpdir=/tmp
+
+
+        perl -I../lib scripts/assess_criteria.pl \
+            --db ../results/bold.db \
+            --log INFO \
+            --criteria COUNTRY \
+            2> ../results/assessed_COUNTRY.log > ../results/assessed_COUNTRY.tsv
+        
+
+[Sun Apr 21 14:53:00 2024]
+localrule COORD:
+    input: scripts/assess_criteria.pl, ../results/bold.db
+    output: ../results/assessed_COORD.tsv, ../results/assessed_COORD.log
+    jobid: 6
+    reason: Missing output files: ../results/assessed_COORD.tsv; Input files updated by another job: ../results/bold.db
+    resources: tmpdir=/tmp
+
+
+        perl -I../lib scripts/assess_criteria.pl \
+            --db ../results/bold.db \
+            --log INFO \
+            --criteria COORD \
+            2> ../results/assessed_COORD.log > ../results/assessed_COORD.tsv
+        
+
+[Sun Apr 21 14:53:00 2024]
+localrule INSTITUTION:
+    input: scripts/assess_criteria.pl, ../results/bold.db
+    output: ../results/assessed_INSTITUTION.tsv, ../results/assessed_INSTITUTION.log
+    jobid: 11
+    reason: Missing output files: ../results/assessed_INSTITUTION.tsv; Input files updated by another job: ../results/bold.db
+    resources: tmpdir=/tmp
+
+
+        perl -I../lib scripts/assess_criteria.pl \
+            --db ../results/bold.db \
+            --log INFO \
+            --criteria INSTITUTION \
+            2> ../results/assessed_INSTITUTION.log > ../results/assessed_INSTITUTION.tsv
+        
+
+[Sun Apr 21 14:53:00 2024]
+localrule SPECIES_ID:
+    input: scripts/assess_criteria.pl, ../results/bold.db
+    output: ../results/assessed_SPECIES_ID.tsv, ../results/assessed_SPECIES_ID.log
+    jobid: 16
+    reason: Missing output files: ../results/assessed_SPECIES_ID.tsv; Input files updated by another job: ../results/bold.db
+    resources: tmpdir=/tmp
+
+
+        perl -I../lib scripts/assess_criteria.pl \
+            --db ../results/bold.db \
+            --log INFO \
+            --criteria SPECIES_ID \
+            2> ../results/assessed_SPECIES_ID.log > ../results/assessed_SPECIES_ID.tsv
+        
+[Sun Apr 21 14:53:02 2024]
+Error in rule apply_indexes:
+    jobid: 3
+    input: scripts/indexes.sql, ../results/bold.db
+    output: ../results/bold_indexed.db
+    shell:
+        
+        sqlite3 ../results/bold.db < scripts/indexes.sql && touch ../results/bold_indexed.db
+        
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+
+[Sun Apr 21 14:53:02 2024]
+Finished job 6.
+2 of 18 steps (11%) done
+[Sun Apr 21 14:53:02 2024]
+Finished job 5.
+3 of 18 steps (17%) done
+[Sun Apr 21 14:53:02 2024]
+Finished job 11.
+4 of 18 steps (22%) done
+[Sun Apr 21 14:53:02 2024]
+Finished job 10.
+5 of 18 steps (28%) done
+[Sun Apr 21 14:53:02 2024]
+Finished job 7.
+6 of 18 steps (33%) done
+[Sun Apr 21 14:53:02 2024]
+Finished job 16.
+7 of 18 steps (39%) done
+[Sun Apr 21 14:53:02 2024]
+Finished job 17.
+8 of 18 steps (44%) done
+Shutting down, this might take some time.
+Exiting because a job execution failed. Look above for error message
+Complete log: .snakemake/log/2024-04-21T145229.913069.snakemake.log
+WorkflowError:
+At least one job did not complete successfully.

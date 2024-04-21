@@ -1,0 +1,5 @@
+INFO - Going to assess criteria: SPECIES_ID
+INFO - Going to connect to database ../results/bold.db
+INFO - Going to connect to database ../results/bold.db
+INFO - Attempting to load 'SPECIES_ID'
+INFO - Loaded implementation SPECIES_ID => BCDM::Criteria::SPECIES_ID

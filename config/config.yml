@@ -1,0 +1,16 @@
+config:
+BOLD_TSV: ../resources/BOLD_test.tsv 
+DB_FILE: ../results/bold.db
+SCHEMA: scripts/schema.sql
+INDEXES: scripts/indexes.sql
+LIBS: ../lib/
+PATH: ../lib/
+TAXONOMY_LOADED: ../results/taxonomy_check.tsv
+CRITERIA: "COLLECTION_DATE COLLECTORS COORD COUNTRY HAS_IMAGE IDENTIFIER ID_METHOD INSTITUTION MUSEUM_ID PUBLIC_VOUCHER SEQ_QUALITY SITE SPECIES_ID TYPE_SPECIMEN"
+DB_FILE_INDEXED: ../results/bold_indexed.db 
+TARGET_LIST: ../resources/all_specs_and_syn.csv
+PROJECT_NAME: "MyProject"
+TAXON_LEVEL: "species"
+KINGDOM: "Animalia"
+LOG_LEVEL: "INFO" 
+DB_CRITERIA_ADDED: ../results/criteria_indexed 

@@ -1,0 +1,334 @@
+Building DAG of jobs...
+Using shell: /usr/bin/bash
+Provided cores: 8
+Rules claiming more threads will be scaled down.
+Job stats:
+job                     count
+--------------------  -------
+COLLECTION_DATE             1
+COLLECTORS                  1
+COORD                       1
+COUNTRY                     1
+HAS_IMAGE                   1
+IDENTIFIER                  1
+ID_METHOD                   1
+INSTITUTION                 1
+MUSEUM_ID                   1
+PUBLIC_VOUCHER              1
+SEQ_QUALITY                 1
+SITE                        1
+SPECIES_ID                  1
+TYPE_SPECIMEN               1
+output_filtered_data        1
+target                      1
+total                      16
+
+Select jobs to execute...
+Execute 8 jobs...
+
+[Sun Apr 21 14:53:43 2024]
+localrule COLLECTION_DATE:
+    input: scripts/assess_criteria.pl, ../results/bold.db
+    output: ../results/assessed_COLLECTION_DATE.tsv, ../results/assessed_COLLECTION_DATE.log
+    jobid: 5
+    reason: Updated input files: ../results/bold.db
+    resources: tmpdir=/tmp
+
+
+        perl -I../lib scripts/assess_criteria.pl \
+            --db ../results/bold.db \
+            --log INFO \
+            --criteria COLLECTION_DATE \
+            2> ../results/assessed_COLLECTION_DATE.log > ../results/assessed_COLLECTION_DATE.tsv
+        
+
+[Sun Apr 21 14:53:43 2024]
+localrule ID_METHOD:
+    input: scripts/assess_criteria.pl, ../results/bold.db
+    output: ../results/assessed_ID_METHOD.tsv, ../results/assessed_ID_METHOD.log
+    jobid: 10
+    reason: Updated input files: ../results/bold.db
+    resources: tmpdir=/tmp
+
+
+        perl -I../lib scripts/assess_criteria.pl \
+            --db ../results/bold.db \
+            --log INFO \
+            --criteria ID_METHOD \
+            2> ../results/assessed_ID_METHOD.log > ../results/assessed_ID_METHOD.tsv
+        
+
+[Sun Apr 21 14:53:43 2024]
+localrule SITE:
+    input: scripts/assess_criteria.pl, ../results/bold.db
+    output: ../results/assessed_SITE.tsv, ../results/assessed_SITE.log
+    jobid: 15
+    reason: Missing output files: ../results/assessed_SITE.tsv
+    resources: tmpdir=/tmp
+
+
+        perl -I../lib scripts/assess_criteria.pl \
+            --db ../results/bold.db \
+            --log INFO \
+            --criteria SITE \
+            2> ../results/assessed_SITE.log > ../results/assessed_SITE.tsv
+        
+
+[Sun Apr 21 14:53:43 2024]
+localrule COLLECTORS:
+    input: scripts/assess_criteria.pl, ../results/bold.db
+    output: ../results/assessed_COLLECTORS.tsv, ../results/assessed_COLLECTORS.log
+    jobid: 4
+    reason: Missing output files: ../results/assessed_COLLECTORS.tsv
+    resources: tmpdir=/tmp
+
+
+        perl -I../lib scripts/assess_criteria.pl \
+            --db ../results/bold.db \
+            --log INFO \
+            --criteria COLLECTORS \
+            2> ../results/assessed_COLLECTORS.log > ../results/assessed_COLLECTORS.tsv
+        
+
+[Sun Apr 21 14:53:43 2024]
+localrule COUNTRY:
+    input: scripts/assess_criteria.pl, ../results/bold.db
+    output: ../results/assessed_COUNTRY.tsv, ../results/assessed_COUNTRY.log
+    jobid: 7
+    reason: Updated input files: ../results/bold.db
+    resources: tmpdir=/tmp
+
+
+        perl -I../lib scripts/assess_criteria.pl \
+            --db ../results/bold.db \
+            --log INFO \
+            --criteria COUNTRY \
+            2> ../results/assessed_COUNTRY.log > ../results/assessed_COUNTRY.tsv
+        
+
+[Sun Apr 21 14:53:43 2024]
+localrule COORD:
+    input: scripts/assess_criteria.pl, ../results/bold.db
+    output: ../results/assessed_COORD.tsv, ../results/assessed_COORD.log
+    jobid: 6
+    reason: Updated input files: ../results/bold.db
+    resources: tmpdir=/tmp
+
+
+        perl -I../lib scripts/assess_criteria.pl \
+            --db ../results/bold.db \
+            --log INFO \
+            --criteria COORD \
+            2> ../results/assessed_COORD.log > ../results/assessed_COORD.tsv
+        
+
+[Sun Apr 21 14:53:43 2024]
+localrule INSTITUTION:
+    input: scripts/assess_criteria.pl, ../results/bold.db
+    output: ../results/assessed_INSTITUTION.tsv, ../results/assessed_INSTITUTION.log
+    jobid: 11
+    reason: Updated input files: ../results/bold.db
+    resources: tmpdir=/tmp
+
+
+        perl -I../lib scripts/assess_criteria.pl \
+            --db ../results/bold.db \
+            --log INFO \
+            --criteria INSTITUTION \
+            2> ../results/assessed_INSTITUTION.log > ../results/assessed_INSTITUTION.tsv
+        
+
+[Sun Apr 21 14:53:43 2024]
+localrule SPECIES_ID:
+    input: scripts/assess_criteria.pl, ../results/bold.db
+    output: ../results/assessed_SPECIES_ID.tsv, ../results/assessed_SPECIES_ID.log
+    jobid: 16
+    reason: Updated input files: ../results/bold.db
+    resources: tmpdir=/tmp
+
+
+        perl -I../lib scripts/assess_criteria.pl \
+            --db ../results/bold.db \
+            --log INFO \
+            --criteria SPECIES_ID \
+            2> ../results/assessed_SPECIES_ID.log > ../results/assessed_SPECIES_ID.tsv
+        
+[Sun Apr 21 14:53:43 2024]
+Finished job 15.
+1 of 16 steps (6%) done
+Select jobs to execute...
+Execute 1 jobs...
+
+[Sun Apr 21 14:53:43 2024]
+localrule TYPE_SPECIMEN:
+    input: scripts/assess_criteria.pl, ../results/bold.db
+    output: ../results/assessed_TYPE_SPECIMEN.tsv, ../results/assessed_TYPE_SPECIMEN.log
+    jobid: 17
+    reason: Updated input files: ../results/bold.db
+    resources: tmpdir=/tmp
+
+
+        perl -I../lib scripts/assess_criteria.pl \
+            --db ../results/bold.db \
+            --log INFO \
+            --criteria TYPE_SPECIMEN \
+            2> ../results/assessed_TYPE_SPECIMEN.log > ../results/assessed_TYPE_SPECIMEN.tsv
+        
+[Sun Apr 21 14:53:43 2024]
+Finished job 4.
+2 of 16 steps (12%) done
+[Sun Apr 21 14:53:43 2024]
+Finished job 6.
+3 of 16 steps (19%) done
+[Sun Apr 21 14:53:43 2024]
+Finished job 10.
+4 of 16 steps (25%) done
+[Sun Apr 21 14:53:43 2024]
+Finished job 5.
+5 of 16 steps (31%) done
+[Sun Apr 21 14:53:43 2024]
+Finished job 16.
+6 of 16 steps (38%) done
+Select jobs to execute...
+Execute 5 jobs...
+
+[Sun Apr 21 14:53:43 2024]
+localrule IDENTIFIER:
+    input: scripts/assess_criteria.pl, ../results/bold.db
+    output: ../results/assessed_IDENTIFIER.tsv, ../results/assessed_IDENTIFIER.log
+    jobid: 9
+    reason: Missing output files: ../results/assessed_IDENTIFIER.tsv
+    resources: tmpdir=/tmp
+
+
+        perl -I../lib scripts/assess_criteria.pl \
+            --db ../results/bold.db \
+            --log INFO \
+            --criteria IDENTIFIER \
+            2> ../results/assessed_IDENTIFIER.log > ../results/assessed_IDENTIFIER.tsv
+        
+
+[Sun Apr 21 14:53:43 2024]
+localrule SEQ_QUALITY:
+    input: scripts/assess_criteria.pl, ../results/bold.db
+    output: ../results/assessed_SEQ_QUALITY.tsv, ../results/assessed_SEQ_QUALITY.log
+    jobid: 14
+    reason: Missing output files: ../results/assessed_SEQ_QUALITY.tsv
+    resources: tmpdir=/tmp
+
+
+        perl -I../lib scripts/assess_criteria.pl \
+            --db ../results/bold.db \
+            --log INFO \
+            --criteria SEQ_QUALITY \
+            2> ../results/assessed_SEQ_QUALITY.log > ../results/assessed_SEQ_QUALITY.tsv
+        
+
+[Sun Apr 21 14:53:43 2024]
+localrule PUBLIC_VOUCHER:
+    input: scripts/assess_criteria.pl, ../results/bold.db
+    output: ../results/assessed_PUBLIC_VOUCHER.tsv, ../results/assessed_PUBLIC_VOUCHER.log
+    jobid: 13
+    reason: Missing output files: ../results/assessed_PUBLIC_VOUCHER.tsv
+    resources: tmpdir=/tmp
+
+
+        perl -I../lib scripts/assess_criteria.pl \
+            --db ../results/bold.db \
+            --log INFO \
+            --criteria PUBLIC_VOUCHER \
+            2> ../results/assessed_PUBLIC_VOUCHER.log > ../results/assessed_PUBLIC_VOUCHER.tsv
+        
+
+[Sun Apr 21 14:53:43 2024]
+localrule HAS_IMAGE:
+    input: scripts/assess_criteria.pl, ../results/bold.db
+    output: ../results/assessed_HAS_IMAGE.tsv, ../results/assessed_HAS_IMAGE.log
+    jobid: 8
+    reason: Missing output files: ../results/assessed_HAS_IMAGE.tsv
+    resources: tmpdir=/tmp
+
+
+        perl -I../lib scripts/assess_criteria.pl \
+            --db ../results/bold.db \
+            --log INFO \
+            --criteria HAS_IMAGE \
+            2> ../results/assessed_HAS_IMAGE.log > ../results/assessed_HAS_IMAGE.tsv
+        
+
+[Sun Apr 21 14:53:43 2024]
+localrule MUSEUM_ID:
+    input: scripts/assess_criteria.pl, ../results/bold.db
+    output: ../results/assessed_MUSEUM_ID.tsv, ../results/assessed_MUSEUM_ID.log
+    jobid: 12
+    reason: Missing output files: ../results/assessed_MUSEUM_ID.tsv
+    resources: tmpdir=/tmp
+
+
+        perl -I../lib scripts/assess_criteria.pl \
+            --db ../results/bold.db \
+            --log INFO \
+            --criteria INSTITUTION \
+            2> ../results/assessed_MUSEUM_ID.log > ../results/assessed_MUSEUM_ID.tsv
+        
+[Sun Apr 21 14:53:43 2024]
+Finished job 7.
+7 of 16 steps (44%) done
+[Sun Apr 21 14:53:43 2024]
+Finished job 11.
+8 of 16 steps (50%) done
+[Sun Apr 21 14:53:43 2024]
+Finished job 9.
+9 of 16 steps (56%) done
+[Sun Apr 21 14:53:43 2024]
+Finished job 13.
+10 of 16 steps (62%) done
+[Sun Apr 21 14:53:43 2024]
+Finished job 14.
+11 of 16 steps (69%) done
+[Sun Apr 21 14:53:43 2024]
+Finished job 12.
+12 of 16 steps (75%) done
+[Sun Apr 21 14:53:43 2024]
+Finished job 17.
+13 of 16 steps (81%) done
+[Sun Apr 21 14:53:44 2024]
+Finished job 8.
+14 of 16 steps (88%) done
+Select jobs to execute...
+Execute 1 jobs...
+
+[Sun Apr 21 14:53:44 2024]
+localrule output_filtered_data:
+    input: scripts/pivot.sql, ../results/bold.db, ../results/bold_indexed.db, ../results/assessed_COLLECTORS.tsv, ../results/assessed_COLLECTION_DATE.tsv, ../results/assessed_COORD.tsv, ../results/assessed_COUNTRY.tsv, ../results/assessed_HAS_IMAGE.tsv, ../results/assessed_IDENTIFIER.tsv, ../results/assessed_ID_METHOD.tsv, ../results/assessed_INSTITUTION.tsv, ../results/assessed_MUSEUM_ID.tsv, ../results/assessed_PUBLIC_VOUCHER.tsv, ../results/assessed_SEQ_QUALITY.tsv, ../results/assessed_SITE.tsv, ../results/assessed_SPECIES_ID.tsv, ../results/assessed_TYPE_SPECIMEN.tsv
+    output: ../results/result_output.tsv
+    jobid: 2
+    reason: Missing output files: ../results/result_output.tsv; Input files updated by another job: ../results/assessed_SPECIES_ID.tsv, ../results/assessed_MUSEUM_ID.tsv, ../results/assessed_PUBLIC_VOUCHER.tsv, ../results/assessed_ID_METHOD.tsv, ../results/assessed_SEQ_QUALITY.tsv, ../results/assessed_COLLECTORS.tsv, ../results/assessed_COUNTRY.tsv, ../results/assessed_HAS_IMAGE.tsv, ../results/assessed_TYPE_SPECIMEN.tsv, ../results/assessed_COLLECTION_DATE.tsv, ../results/assessed_IDENTIFIER.tsv, ../results/assessed_INSTITUTION.tsv, ../results/assessed_COORD.tsv, ../results/assessed_SITE.tsv
+    resources: tmpdir=/tmp
+
+
+        sqlite3 ../results/bold.db <<EOF
+.headers ON
+.mode tabs
+.output ../results/result_output.tsv
+.read scripts/pivot.sql
+.quit
+EOF
+        
+[Sun Apr 21 14:53:44 2024]
+Finished job 2.
+15 of 16 steps (94%) done
+Select jobs to execute...
+Execute 1 jobs...
+
+[Sun Apr 21 14:53:44 2024]
+localrule target:
+    input: ../results/bold.db, ../results/result_output.tsv, ../results/assessed_COLLECTORS.tsv, ../results/assessed_COLLECTION_DATE.tsv, ../results/assessed_COORD.tsv, ../results/assessed_COUNTRY.tsv, ../results/assessed_HAS_IMAGE.tsv, ../results/assessed_IDENTIFIER.tsv, ../results/assessed_ID_METHOD.tsv, ../results/assessed_INSTITUTION.tsv, ../results/assessed_MUSEUM_ID.tsv, ../results/assessed_PUBLIC_VOUCHER.tsv, ../results/assessed_SEQ_QUALITY.tsv, ../results/assessed_SITE.tsv, ../results/assessed_SPECIES_ID.tsv, ../results/assessed_TYPE_SPECIMEN.tsv, ../results/bold_indexed.db
+    jobid: 0
+    reason: Input files updated by another job: ../results/assessed_SPECIES_ID.tsv, ../results/assessed_MUSEUM_ID.tsv, ../results/assessed_PUBLIC_VOUCHER.tsv, ../results/result_output.tsv, ../results/assessed_ID_METHOD.tsv, ../results/assessed_SEQ_QUALITY.tsv, ../results/assessed_COLLECTORS.tsv, ../results/assessed_COUNTRY.tsv, ../results/assessed_HAS_IMAGE.tsv, ../results/assessed_TYPE_SPECIMEN.tsv, ../results/assessed_COLLECTION_DATE.tsv, ../results/assessed_IDENTIFIER.tsv, ../results/assessed_INSTITUTION.tsv, ../results/assessed_COORD.tsv, ../results/assessed_SITE.tsv
+    resources: tmpdir=/tmp
+
+[Sun Apr 21 14:53:44 2024]
+Finished job 0.
+16 of 16 steps (100%) done
+Complete log: .snakemake/log/2024-04-21T145342.916075.snakemake.log

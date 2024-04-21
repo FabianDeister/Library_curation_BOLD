@@ -1,0 +1,14 @@
+INFO - Going to assess criteria: HAS_IMAGE
+INFO - Going to connect to database ../results/bold.db
+INFO - Going to connect to database ../results/bold.db
+INFO - Attempting to load 'HAS_IMAGE'
+INFO - Loaded implementation HAS_IMAGE => BCDM::Criteria::HAS_IMAGE
+INFO - Image for AACTA016-20: https://caos.boldsystems.org:31488/api/objects/caos-cloud.linode-us-east.25_222.e7f92b6a-4961-4787-a979-030f637aa61f.jpg
+INFO - Image for AACTA018-20: https://caos.boldsystems.org:31488/api/objects/caos-cloud.linode-us-east.18_185.b7567025-4fb6-4fec-aa1e-2b048807ff1d.jpg
+INFO - Image for AACTA018-20: https://caos.boldsystems.org:31488/api/objects/caos-cloud.linode-us-east.17_159.c465ac9c-de2f-40c8-b92d-e604a1ec6960.jpg
+INFO - Image for AACTA023-20: https://caos.boldsystems.org:31488/api/objects/caos-cloud.linode-us-east.24_276.0dccfa28-848d-4e7c-9379-b9966fb5daeb.jpg
+INFO - Image for AACTA025-20: https://caos.boldsystems.org:31488/api/objects/caos-cloud.linode-us-east.23_246.f34d0ea5-ae05-4589-ac0d-b9b40610d05d.jpg
+INFO - Image for AACTA025-20: https://caos.boldsystems.org:31488/api/objects/caos-cloud.linode-us-east.17_149.db462949-9a99-4d6e-8775-31d19ec522c1.jpg
+INFO - Image for AACTA041-20: https://caos.boldsystems.org:31488/api/objects/caos-cloud.linode-us-east.21_241.56441155-a945-479d-aa9e-3d759d46ace6.jpg
+INFO - Image for AACTA066-20: https://caos.boldsystems.org:31488/api/objects/caos-cloud.linode-us-east.19_281.f403171a-229b-4ad1-888a-c1eea687e35f.jpg
+INFO - Image for AACTA067-20: https://caos.boldsystems.org:31488/api/objects/caos-cloud.linode-us-east.13_277.d5fd46a8-d832-4338-b123-2d3dc0f14287.jpg

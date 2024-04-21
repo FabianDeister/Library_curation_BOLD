@@ -1,0 +1,5 @@
+INFO - Going to assess criteria: SITE
+INFO - Going to connect to database ../results/bold.db
+INFO - Going to connect to database ../results/bold.db
+INFO - Attempting to load 'SITE'
+INFO - Loaded implementation SITE => BCDM::Criteria::SITE

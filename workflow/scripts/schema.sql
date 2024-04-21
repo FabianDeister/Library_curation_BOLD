@@ -78,6 +78,12 @@ CREATE TABLE IF NOT EXISTS "bold"(
     "sequence_run_site" TEXT,
     "sequence_upload_date" TEXT,
     "recordset_code_arr" TEXT,
+    "extrainfo" TEXT,
+    "country" TEXT,
+    "collection_note" TEXT,
+    "associated_specimen" TEXT,
+    "gb_acs" TEXT,
+    "nucraw" TEXT,
     FOREIGN KEY(taxonid) REFERENCES taxa(taxonid)
 );
 
