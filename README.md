@@ -42,7 +42,7 @@ mamba activate bold-curation
 ```
 
 ## How to run
-
+# Bash
 Although the aim of this project is to integrate all steps of the process
 in a simple snakemake pipeline, at present this is not implemented. Instead,
 the steps are executed individually on the command line as perl scripts
@@ -54,4 +54,11 @@ the invocation looks like the following inside the scripts folder:
 ```{shell}
 perl -I../../lib scriptname.pl -arg1 val1 -arg2 val2
 ```
- 
+# snakemake
+
+Follow the installation instructions above. Navigate to the directory "workflow" and type:
+```{shell}
+snakemake -p -c {number of cores} target
+```
+
+
