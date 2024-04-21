@@ -26,7 +26,14 @@ documents, which means the entire tool chain is FAIR compliant according
 to the current state of the art.
 
 ## Install
-
+Clone the repo:
+```{shell}
+git clone https://github.com/FabianDeister/Library_curation_BOLD.git
+```
+Change directory: 
+```{shell}
+cd Library_curation_BOLD
+```
 The code in this repo depends on various tools. These are managed using
 the `mamba` program (a drop-in replacement of `conda`). The following
 sets up an environment in which all needed tools are installed:
