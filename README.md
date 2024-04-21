@@ -63,9 +63,27 @@ perl -I../../lib scriptname.pl -arg1 val1 -arg2 val2
 ```
 ### snakemake
 
-Follow the installation instructions above. Navigate to the directory "workflow" and type:
+Follow the installation instructions above.
+
+Update config/config.yml to define your input data.
+
+Navigate to the directory "workflow" and type:
 ```{shell}
 snakemake -p -c {number of cores} target
 ```
-modify config.yml to define input data.
 
+If running on an HPC cluster with a SLURM scheduler you could use a bash script like this one:
+```{shell}
+#!/bin/bash
+#SBATCH --partition=hour
+#SBATCH --output=job_curate_bold_%j.out
+#SBATCH --error=job_curate_bold_%j.err
+#SBATCH --mem=24G
+#SBATCH --cpus-per-task=2
+
+source activate bold-curation
+
+snakemake -p -c 2 target
+
+echo Complete!
+```
