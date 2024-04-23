@@ -4,27 +4,7 @@ import os
 # Read configuration file
 configfile: "../config/config.yml"
 
-rule target:
-    input: 
-        config["DB_FILE"],
-        "../results/result_output.tsv",
-        "../results/assessed_COLLECTORS.tsv",
-        "../results/assessed_COLLECTION_DATE.tsv",
-        "../results/assessed_COORD.tsv",
-        "../results/assessed_COUNTRY.tsv",
-        "../results/assessed_HAS_IMAGE.tsv",
-        "../results/assessed_IDENTIFIER.tsv",
-        "../results/assessed_ID_METHOD.tsv",
-        "../results/assessed_INSTITUTION.tsv",
-        "../results/assessed_MUSEUM_ID.tsv",
-        "../results/assessed_PUBLIC_VOUCHER.tsv",
-        "../results/assessed_SEQ_QUALITY.tsv",
-        "../results/assessed_SITE.tsv",
-        "../results/assessed_SPECIES_ID.tsv",
-        "../results/assessed_TYPE_SPECIMEN.tsv",
-        "../results/taxonomy_loaded.txt",
-        config["DB_FILE_INDEXED"]
-        
+
 
 # Rule for creating the database and loading BCDM
 rule create_load_db:
@@ -40,7 +20,8 @@ rule create_load_db:
 rule apply_indexes:
     input:
         indexes=config["INDEXES"],
-        db=config["DB_FILE"]
+        db=config["DB_FILE"],
+        taxonomy= "../results/taxonomy_loaded.txt"
     output:
         touch(config["DB_FILE_INDEXED"])
     shell:
@@ -91,7 +72,8 @@ rule import_target_list_perl:
 rule COLLECTION_DATE:
     input:
         script="scripts/assess_criteria.pl",
-        db="../results/bold.db"
+        db="../results/bold.db",
+        flag= config["DB_FILE_INDEXED"]
     output:
         tsv="../results/assessed_COLLECTION_DATE.tsv",
         log="../results/assessed_COLLECTION_DATE.log"
@@ -108,7 +90,8 @@ rule COLLECTION_DATE:
 rule COLLECTORS:
     input:
         script="scripts/assess_criteria.pl",
-        db="../results/bold.db"
+        db="../results/bold.db",
+        flag= config["DB_FILE_INDEXED"]
     output:
         tsv="../results/assessed_COLLECTORS.tsv",
         log="../results/assessed_COLLECTORS.log"
@@ -125,7 +108,8 @@ rule COLLECTORS:
 rule COORD:
     input:
         script="scripts/assess_criteria.pl",
-        db="../results/bold.db"
+        db="../results/bold.db",
+        flag= config["DB_FILE_INDEXED"]
     output:
         tsv="../results/assessed_COORD.tsv",
         log="../results/assessed_COORD.log"
@@ -141,7 +125,8 @@ rule COORD:
 rule COUNTRY:
     input:
         script="scripts/assess_criteria.pl",
-        db="../results/bold.db"
+        db="../results/bold.db",
+        flag= config["DB_FILE_INDEXED"]
     output:
         tsv="../results/assessed_COUNTRY.tsv",
         log="../results/assessed_COUNTRY.log"
@@ -157,9 +142,11 @@ rule COUNTRY:
 rule HAS_IMAGE:
     input:
         script="scripts/assess_criteria.pl",
-        db="../results/bold.db"
+        db="../results/bold.db",
+        flag= config["DB_FILE_INDEXED"]
     output:
-        tsv="../results/assessed_HAS_IMAGE.tsv"
+        tsv="../results/assessed_HAS_IMAGE.tsv",
+        log="../results/assessed_HAS_IMAGE.log"
     shell:
         """
         perl -I../lib {input.script} \\
@@ -173,7 +160,8 @@ rule HAS_IMAGE:
 rule IDENTIFIER:
     input:
         script="scripts/assess_criteria.pl",
-        db="../results/bold.db"
+        db="../results/bold.db",
+        flag= config["DB_FILE_INDEXED"]
     output:
         tsv="../results/assessed_IDENTIFIER.tsv",
         log="../results/assessed_IDENTIFIER.log"
@@ -189,7 +177,8 @@ rule IDENTIFIER:
 rule ID_METHOD:
     input:
         script="scripts/assess_criteria.pl",
-        db="../results/bold.db"
+        db="../results/bold.db",
+        flag= config["DB_FILE_INDEXED"]
     output:
         tsv="../results/assessed_ID_METHOD.tsv",
         log="../results/assessed_ID_METHOD.log"
@@ -205,9 +194,11 @@ rule ID_METHOD:
 rule INSTITUTION:
     input:
         script="scripts/assess_criteria.pl",
-        db="../results/bold.db"
+        db="../results/bold.db",
+        flag= config["DB_FILE_INDEXED"]
     output:
-        tsv="../results/assessed_INSTITUTION.tsv"
+        tsv="../results/assessed_INSTITUTION.tsv",
+        log="../results/assessed_INSTITUTION.log"
     shell:
         """
         perl -I../lib {input.script} \\
@@ -220,9 +211,11 @@ rule INSTITUTION:
 rule MUSEUM_ID:
     input:
         script="scripts/assess_criteria.pl",
-        db="../results/bold.db"
+        db="../results/bold.db",
+        flag= config["DB_FILE_INDEXED"]
     output:
-        tsv="../results/assessed_MUSEUM_ID.tsv"
+        tsv="../results/assessed_MUSEUM_ID.tsv",
+        log="../results/assessed_MUSEUM_ID.log"
     shell:
         """
         perl -I../lib {input.script} \\
@@ -235,9 +228,11 @@ rule MUSEUM_ID:
 rule PUBLIC_VOUCHER:
     input:
         script="scripts/assess_criteria.pl",
-        db="../results/bold.db"
+        db="../results/bold.db",
+        flag= config["DB_FILE_INDEXED"]
     output:
         tsv="../results/assessed_PUBLIC_VOUCHER.tsv",
+        log="../results/assessed_PUBLIC_VOUCHER.log"
     shell:
         """
         perl -I../lib {input.script} \\
@@ -250,9 +245,11 @@ rule PUBLIC_VOUCHER:
 rule SEQ_QUALITY:
     input:
         script="scripts/assess_criteria.pl",
-        db="../results/bold.db"
+        db="../results/bold.db",
+        flag= config["DB_FILE_INDEXED"]
     output:
         tsv="../results/assessed_SEQ_QUALITY.tsv",
+        log="../results/assessed_SEQ_QUALITY.log"
     shell:
         """
         perl -I../lib {input.script} \\
@@ -265,9 +262,11 @@ rule SEQ_QUALITY:
 rule SITE:
     input:
         script="scripts/assess_criteria.pl",
-        db="../results/bold.db"
+        db="../results/bold.db",
+        flag= config["DB_FILE_INDEXED"]
     output:
-        tsv="../results/assessed_SITE.tsv"
+        tsv="../results/assessed_SITE.tsv",
+        log="../results/assessed_SITE.log"
     shell:
         """
         perl -I../lib {input.script} \\
@@ -280,12 +279,14 @@ rule SITE:
 rule SPECIES_ID:
     input:
         script="scripts/assess_criteria.pl",
-        db="../results/bold.db"
+        db="../results/bold.db",
+        flag= config["DB_FILE_INDEXED"]
     output:
-        tsv="../results/assessed_SPECIES_ID.tsv"
+        tsv="../results/assessed_SPECIES_ID.tsv",
+        log="../results/assessed_SPECIES_ID.log"
     shell:
         """
-        perl -I../lib {input.script} \\
+        perl -I ../lib {input.script} \\
             --db {input.db} \\
             --log INFO \\
             --criteria SPECIES_ID \\
@@ -295,22 +296,56 @@ rule SPECIES_ID:
 rule TYPE_SPECIMEN:
     input:
         script="scripts/assess_criteria.pl",
-        db="../results/bold.db"
+        db="../results/bold.db",
+        flag= config["DB_FILE_INDEXED"]
     output:
-        tsv="../results/assessed_TYPE_SPECIMEN.tsv"
+        tsv="../results/assessed_TYPE_SPECIMEN.tsv",
+        log="../results/assessed_TYPE_SPECIMEN.log"
     shell:
         """
-        perl -I../lib {input.script} \\
+        perl -I ../lib {input.script} \\
             --db {input.db} \\
             --log INFO \\
             --criteria TYPE_SPECIMEN \\
             2> {output.log} > {output.tsv}
         """
+rule concatinate:
+    input:
+        concat="scripts/concat_tsvs.pl",
+        db="../results/bold.db",
+        collectors= rules.COLLECTORS.output.tsv ,
+        date= rules.COLLECTION_DATE.output.tsv ,
+        coord= rules.COORD.output.tsv , 
+        country= rules.COUNTRY.output.tsv , 
+        image= rules.HAS_IMAGE.output.tsv , 
+        identifier= rules.IDENTIFIER.output.tsv , 
+        method= rules.ID_METHOD.output.tsv , 
+        institurion= rules.INSTITUTION.output.tsv , 
+        museums_id= rules.MUSEUM_ID.output.tsv , 
+        voucher= rules.PUBLIC_VOUCHER.output.tsv ,
+        quality= rules.SEQ_QUALITY.output.tsv , 
+        site= rules.SITE.output.tsv , 
+        spec_id= rules.SPECIES_ID.output.tsv ,
+        type= rules.TYPE_SPECIMEN.output.tsv ,
+        taxonomy= rules.load_taxonomy.output ,
+    output:
+        concat= "CONCATENATED.tsv"
+    shell:
+        """
+        perl  {input.concat} ../results/assessed_SPECIES_ID.tsv ../results/assessed_TYPE_SPECIMEN.tsv ../results/assessed_SEQ_QUALITY.tsv ../results/assessed_PUBLIC_VOUCHER.tsv ../results/assessed_HAS_IMAGE.tsv ../results/assessed_IDENTIFIER.tsv ../results/assessed_ID_METHOD.tsv ../results/assessed_COLLECTION_DATE.tsv ../results/assessed_COLLECTION_DATE.tsv ../results/assessed_COUNTRY.tsv ../results/assessed_SITE.tsv ../results/assessed_COORD.tsv ../results/assessed_INSTITUTION.tsv ../results/assessed_MUSEUM_ID.tsv > CONCATENATED.tsv
+
+sqlite3 ../results/bold.db <<EOF
+.mode tabs
+.import CONCATENATED.tsv
+.quit   
+EOF    
+        """    
 # Rule for outputting filtered data in BCDM        
 rule output_filtered_data:
     input:
         pivot_query="scripts/pivot.sql",
         db="../results/bold.db",
+        concat="CONCATENATED.tsv",
         indexed=config["DB_FILE_INDEXED"],
         collectors= rules.COLLECTORS.output.tsv ,
         date= rules.COLLECTION_DATE.output.tsv ,
@@ -326,18 +361,20 @@ rule output_filtered_data:
         site= rules.SITE.output.tsv , 
         spec_id= rules.SPECIES_ID.output.tsv ,
         type= rules.TYPE_SPECIMEN.output.tsv ,
-        tyxonomy= rules.load_taxonomy.output ,
+        taxonomy= rules.load_taxonomy.output ,
     output:
         "../results/result_output.tsv"
     shell:
         """
-        sqlite3 {input.db} <<EOF
-.headers ON
+        sqlite3 ../results/bold.db <<EOF
+.headers ON        
 .mode tabs
-.output {output}
-.read {input.pivot_query}
+.output ../results/result_output.tsv
+.read scripts/pivot.sql
 .quit
 EOF
         """
+
+
 
 
