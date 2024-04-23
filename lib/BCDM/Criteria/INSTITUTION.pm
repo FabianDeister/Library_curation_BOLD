@@ -14,8 +14,7 @@ my @neg = (
     'private',
     'research collection of',
     'unknown',
-    'unvouchered',
-    '',  # for blank values
+    'unvouchered'
 );
 
 my $log = __PACKAGE__->_get_logger(__PACKAGE__, 'DEBUG');
@@ -44,8 +43,20 @@ sub _assess {
         }
     }
 
+    # assume it passed
+    my $result = 1;
+
+    # failure if list of matches is non-empty
+    if ( @mn ) {
+        $result = 0;
+    }
+
+    # failure if field is empty
+    elsif ( not $method ) {
+        $result = 0;
+    }
+
     # Return result
-    my $result = @mn ? 0 : 1;
     return $result, "Based on whether it has a negative (@mn) or no matches (null)";
     
 }
