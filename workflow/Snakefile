@@ -4,8 +4,6 @@ import os
 # Read configuration file
 configfile: "../config/config.yml"
 
-
-
 rule target:
     input: 
         config["DB_FILE"],
@@ -161,8 +159,7 @@ rule HAS_IMAGE:
         script="scripts/assess_criteria.pl",
         db="../results/bold.db"
     output:
-        tsv="../results/assessed_HAS_IMAGE.tsv",
-        log="../results/assessed_HAS_IMAGE.log"
+        tsv="../results/assessed_HAS_IMAGE.tsv"
     shell:
         """
         perl -I../lib {input.script} \\
@@ -210,8 +207,7 @@ rule INSTITUTION:
         script="scripts/assess_criteria.pl",
         db="../results/bold.db"
     output:
-        tsv="../results/assessed_INSTITUTION.tsv",
-        log="../results/assessed_INSTITUTION.log"
+        tsv="../results/assessed_INSTITUTION.tsv"
     shell:
         """
         perl -I../lib {input.script} \\
@@ -226,8 +222,7 @@ rule MUSEUM_ID:
         script="scripts/assess_criteria.pl",
         db="../results/bold.db"
     output:
-        tsv="../results/assessed_MUSEUM_ID.tsv",
-        log="../results/assessed_MUSEUM_ID.log"
+        tsv="../results/assessed_MUSEUM_ID.tsv"
     shell:
         """
         perl -I../lib {input.script} \\
@@ -243,7 +238,6 @@ rule PUBLIC_VOUCHER:
         db="../results/bold.db"
     output:
         tsv="../results/assessed_PUBLIC_VOUCHER.tsv",
-        log="../results/assessed_PUBLIC_VOUCHER.log"
     shell:
         """
         perl -I../lib {input.script} \\
@@ -259,7 +253,6 @@ rule SEQ_QUALITY:
         db="../results/bold.db"
     output:
         tsv="../results/assessed_SEQ_QUALITY.tsv",
-        log="../results/assessed_SEQ_QUALITY.log"
     shell:
         """
         perl -I../lib {input.script} \\
@@ -274,8 +267,7 @@ rule SITE:
         script="scripts/assess_criteria.pl",
         db="../results/bold.db"
     output:
-        tsv="../results/assessed_SITE.tsv",
-        log="../results/assessed_SITE.log"
+        tsv="../results/assessed_SITE.tsv"
     shell:
         """
         perl -I../lib {input.script} \\
@@ -290,8 +282,7 @@ rule SPECIES_ID:
         script="scripts/assess_criteria.pl",
         db="../results/bold.db"
     output:
-        tsv="../results/assessed_SPECIES_ID.tsv",
-        log="../results/assessed_SPECIES_ID.log"
+        tsv="../results/assessed_SPECIES_ID.tsv"
     shell:
         """
         perl -I../lib {input.script} \\
@@ -306,8 +297,7 @@ rule TYPE_SPECIMEN:
         script="scripts/assess_criteria.pl",
         db="../results/bold.db"
     output:
-        tsv="../results/assessed_TYPE_SPECIMEN.tsv",
-        log="../results/assessed_TYPE_SPECIMEN.log"
+        tsv="../results/assessed_TYPE_SPECIMEN.tsv"
     shell:
         """
         perl -I../lib {input.script} \\
@@ -322,21 +312,21 @@ rule output_filtered_data:
         pivot_query="scripts/pivot.sql",
         db="../results/bold.db",
         indexed=config["DB_FILE_INDEXED"],
-        collectors="../results/assessed_COLLECTORS.tsv",
-        date="../results/assessed_COLLECTION_DATE.tsv",
-        coord="../results/assessed_COORD.tsv",
-        country="../results/assessed_COUNTRY.tsv",
-        image="../results/assessed_HAS_IMAGE.tsv",
-        identifier="../results/assessed_IDENTIFIER.tsv",
-        method="../results/assessed_ID_METHOD.tsv",
-        institurion="../results/assessed_INSTITUTION.tsv",
-        museums_id="../results/assessed_MUSEUM_ID.tsv",
-        voucher="../results/assessed_PUBLIC_VOUCHER.tsv",
-        quality="../results/assessed_SEQ_QUALITY.tsv",
-        site="../results/assessed_SITE.tsv",
-        spec_id="../results/assessed_SPECIES_ID.tsv",
-        type="../results/assessed_TYPE_SPECIMEN.tsv",
-        tyxonomy="../results/taxonomy_loaded.txt",
+        collectors= rules.COLLECTORS.output.tsv ,
+        date= rules.COLLECTION_DATE.output.tsv ,
+        coord= rules.COORD.output.tsv , 
+        country= rules.COUNTRY.output.tsv , 
+        image= rules.HAS_IMAGE.output.tsv , 
+        identifier= rules.IDENTIFIER.output.tsv , 
+        method= rules.ID_METHOD.output.tsv , 
+        institurion= rules.INSTITUTION.output.tsv , 
+        museums_id= rules.MUSEUM_ID.output.tsv , 
+        voucher= rules.PUBLIC_VOUCHER.output.tsv ,
+        quality= rules.SEQ_QUALITY.output.tsv , 
+        site= rules.SITE.output.tsv , 
+        spec_id= rules.SPECIES_ID.output.tsv ,
+        type= rules.TYPE_SPECIMEN.output.tsv ,
+        tyxonomy= rules.load_taxonomy.output ,
     output:
         "../results/result_output.tsv"
     shell:
@@ -350,4 +340,4 @@ rule output_filtered_data:
 EOF
         """
 
-    
+
