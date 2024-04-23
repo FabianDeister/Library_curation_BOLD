@@ -8,7 +8,6 @@ my %cbg = (
     'Kate Perez'     => 1,
     'Angela Telfer'  => 1,
     'BOLD ID Engine' => 1,
-    ''               => 1,
 );
 
 # this so that we know the criterionid for
@@ -28,6 +27,11 @@ sub _assess {
     # known entity not considered an expert
     if ( $cbg{$identifier} ) {
         return 0, "identified_by: '$identifier'";
+    }
+
+    # no identifier given
+    elsif ( not $identifier ) {
+        return 0, "no identifier named";
     }
 
     # everything else
