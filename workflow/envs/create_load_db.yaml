@@ -1,0 +1,8 @@
+name: create_load_database
+channels:
+  - conda-forge
+  - bioconda
+  - defaults
+dependencies:
+  - perl-text-csv
+  - perl-log-log4perl
