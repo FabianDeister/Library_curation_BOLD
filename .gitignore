@@ -3,3 +3,7 @@ results/bold.db
 .idea
 .DS_Store
 *.tsv.gz
+.Rhistory
+.Rproj.user/
+*.Rproj
+criteria/
