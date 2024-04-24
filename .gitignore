@@ -1,3 +1,4 @@
+.snakemake
 resources/BOLD_Public.*.tsv
 results/bold.db
 .idea
@@ -7,3 +8,5 @@ results/bold.db
 .Rproj.user/
 *.Rproj
 criteria/
+logs/
+results/
