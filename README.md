@@ -84,7 +84,7 @@ If running on an HPC cluster with a SLURM scheduler you could use a bash script 
 
 source activate bold-curation
 
-snakemake -p -c 2 target
+snakemake -p -c 2 all
 
 echo Complete!
 ```
