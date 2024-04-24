@@ -12,7 +12,7 @@ use Log::Log4perl qw(:easy);
 # number of microsends to sleep before requests. Can be adjusted from outside the module via something like 500:
 # $BCDM::Criteria::HAS_IMAGE::SLEEP = 500;
 our $SLEEP = 500;
-
+my$flag=0;
 # endpoints to the CAOS object store. I wonder if the port number is fixed.
 my $base_url  = 'https://caos.boldsystems.org:31488/api/images?processids=';
 my $image_url = 'https://caos.boldsystems.org:31488/api/objects/';
@@ -58,15 +58,15 @@ $io->prepare_rs;
 my @queue;
 while (my $record = $io->next) {
 	if ( scalar(@queue) == 100 ) {
+		AGAIN:
 		my $process  = join ',', map { $_->processid } @queue;
 		my $wspoint  = $base_url . $process;
 		my $uagent   = LWP::UserAgent->new;
-		
 		# going to attempt request
 		$log->debug("Attempting $wspoint");
 		my $response = $uagent->get($wspoint);
 		$log->debug($response);
-
+		
     		# inspect HTTP::Response
 		if ( $response->is_success) {
 
@@ -96,3 +96,8 @@ while (my $record = $io->next) {
 		push @queue, $record;
 	}
 }
+if(defined scalar(@queue) && $flag==0)
+	{
+		$flag=1;
+		goto AGAIN;
+	}
