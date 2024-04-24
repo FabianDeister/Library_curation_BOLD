@@ -4,7 +4,11 @@ configfile: "config/config.yml"
 rule all:
     input:
         "results/result_output.tsv"
-
+rule clean:
+    shell:
+        """
+        perl workflow/scripts/clean.pl
+        """
 # Rule for creating the database and loading BCDM
 rule create_load_db:
     input:
