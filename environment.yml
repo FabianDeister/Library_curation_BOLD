@@ -5,9 +5,9 @@ channels:
   - eumetsat
   - defaults
 dependencies:
-  - snakemake = 8.10.7
-  - mamba = 1.5.8
-  - sqlite = 3.45.3
+  - snakemake
+  - mamba
+  - sqlite
   - perl-bio-phylo-forest-dbtree
   - perl-text-csv_xs
   - perl-log-log4perl
