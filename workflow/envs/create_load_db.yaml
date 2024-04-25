@@ -4,6 +4,7 @@ channels:
   - bioconda
   - defaults
 dependencies:
+  - sqlite
   - perl-text-csv
   - perl-log-log4perl
   - perl-dbd-sqlite
