@@ -62,7 +62,12 @@ while (my $taxon = $taxa->next) {
         my $bin_records = $orm->resultset('Bold')->search({ bin_uri => $uri });
         my $bin_taxa = $bin_records->search({}, { columns => 'taxonid', distinct => 1 });
         my $bin_taxon_count = $bin_taxa->count;
-        $log->warn("Found $bin_taxon_count taxa sharing bin $uri");
+        if ( $bin_taxon_count > 1 ) {
+            $log->warn("Found $bin_taxon_count taxa sharing bin $uri");
+        }
+        else {
+            $log->info("Found $bin_taxon_count taxa sharing bin $uri");
+        }
 
         # If this is anything other than zero, there is a problem
         $is_shared++ if $bin_taxon_count > 1;
