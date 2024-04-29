@@ -29,7 +29,7 @@ $log->info("Going to assess taxa for BAGS");
 # Connect to database, prepare result set of species
 $log->info("Going to connect to database $db_file");
 my $orm = BCDM::ORM->connect("dbi:SQLite:$db_file", "", "", { quote_char => '"' });
-my $taxa = $orm->resultset('Taxa')->search({ level => 'species' });
+my $taxa = $orm->resultset('Taxa')->search({ level => 'species', name => { '!=' => '' } });
 $log->info("Will assess " . $taxa->count . " species");
 
 # Iterate over taxa
@@ -39,7 +39,7 @@ while (my $taxon = $taxa->next) {
     $log->info("Assessing taxon $name");
 
     # Get all records for this taxon
-    my $records = $taxon->bolds;
+    my $records = $orm->resultset('Bold')->search({ taxonid => $taxon->taxonid });
 
     # Count records
     my $record_count = $records->count;
