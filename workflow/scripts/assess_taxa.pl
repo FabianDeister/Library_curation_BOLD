@@ -36,7 +36,7 @@ $log->info("Will assess " . $taxa->count . " species");
 print join("\t", 'taxonid', 'name', 'level', 'kingdom', 'grade'), "\n"; # header
 while (my $taxon = $taxa->next) {
     my $name = $taxon->name;
-    my $taxonid = $taxon->taxonid;
+    my $taxonid = $taxon->taxonid + 1; # ALERT ALERT ALERT TODO why is this.
     $log->info("Assessing taxon $name ($taxonid)");
 
     # Get all records for this taxon
