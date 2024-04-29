@@ -1,5 +1,5 @@
 ![Perl CI](https://github.com/FabianDeister/Library_curation_BOLD/actions/workflows/ci.yml/badge.svg)
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.10975576.svg)](https://doi.org/10.5281/zenodo.10975576)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.11082683.svg)](https://doi.org/10.5281/zenodo.11082683)
 [![DOI](https://zenodo.org/badge/DOI/10.48546/WORKFLOWHUB.WORKFLOW.833.1.svg)](https://doi.org/10.48546/WORKFLOWHUB.WORKFLOW.833.1)
 
 # Library curation BOLD
@@ -68,9 +68,9 @@ Follow the installation instructions above.
 
 Update config/config.yml to define your input data.
 
-Navigate to the directory "workflow" and type:
+in *Library_curation_BOLD* type:
 ```{shell}
-snakemake -p -c {number of cores} target
+snakemake -p -c {number of cores}
 ```
 
 If running on an HPC cluster with a SLURM scheduler you could use a bash script like this one:
