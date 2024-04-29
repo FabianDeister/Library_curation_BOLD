@@ -68,9 +68,9 @@ Follow the installation instructions above.
 
 Update config/config.yml to define your input data.
 
-Navigate to the directory "workflow" and type:
+in *Library_curation_BOLD* type:
 ```{shell}
-snakemake -p -c {number of cores} target
+snakemake -p -c {number of cores}
 ```
 
 If running on an HPC cluster with a SLURM scheduler you could use a bash script like this one:
