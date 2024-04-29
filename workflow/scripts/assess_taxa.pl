@@ -53,8 +53,11 @@ while (my $taxon = $taxa->next) {
 
     # Iterate over bins, check if bin is shared among taxa
     my $is_shared = 0;
-    while(my $bin_uri = $bins->next) {
+    URI: while(my $bin_uri = $bins->next) {
         my $uri = $bin_uri->bin_uri;
+        next URI unless $uri; # skip empty URIs
+
+        # Has a real URI, so we can assess it
         $log->info("Assessing bin $uri");
         my $bin_records = $orm->resultset('Bold')->search({ bin_uri => $uri });
         my $bin_taxa = $bin_records->search({}, { columns => 'taxonid', distinct => 1 });
