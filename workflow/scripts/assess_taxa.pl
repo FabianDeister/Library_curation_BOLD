@@ -57,7 +57,7 @@ while (my $taxon = $taxa->next) {
         my $uri = $bin_uri->bin_uri;
         $log->info("Assessing bin $uri");
         my $bin_records = $orm->resultset('Bold')->search({ bin_uri => $uri });
-        my $bin_taxa = $bin_records->search({}, { columns => 'taxon_id', distinct => 1 });
+        my $bin_taxa = $bin_records->search({}, { columns => 'taxonid', distinct => 1 });
         my $bin_taxon_count = $bin_taxa->count;
         $log->info("Found $bin_taxon_count taxa sharing bin $uri");
 
