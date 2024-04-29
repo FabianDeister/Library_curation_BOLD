@@ -36,10 +36,11 @@ $log->info("Will assess " . $taxa->count . " species");
 print join("\t", 'taxonid', 'name', 'level', 'kingdom', 'grade'), "\n"; # header
 while (my $taxon = $taxa->next) {
     my $name = $taxon->name;
-    $log->info("Assessing taxon $name");
+    my $taxonid = $taxon->taxonid;
+    $log->info("Assessing taxon $name ($taxonid)");
 
     # Get all records for this taxon
-    my $records = $orm->resultset('Bold')->search({ taxonid => $taxon->taxonid });
+    my $records = $orm->resultset('Bold')->search({ taxonid => $taxonid });
 
     # Count records
     my $record_count = $records->count;
