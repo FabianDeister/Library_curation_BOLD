@@ -1,14 +1,18 @@
 # Read configuration file
 configfile: "config/config.yml"
 
+# Final rule that brings it all together
 rule all:
     input:
         "results/result_output.tsv"
+
+# Rule for removing intermediate output
 rule clean:
     shell:
         """
         perl workflow/scripts/clean.pl
         """
+
 # Rule for creating the database and loading BCDM
 rule create_load_db:
     input:
