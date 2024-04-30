@@ -29,6 +29,17 @@ $log->info("Going to assess taxa for BAGS");
 # Connect to database, prepare result set of species
 $log->info("Going to connect to database $db_file");
 my $orm = BCDM::ORM->connect("dbi:SQLite:$db_file", "", "", { quote_char => '"' });
+
+# NOTE: the query below now fetches ALL taxa in the normalized taxa table as produced by
+# load_taxonomy.pl. This is because, for the BAGS grading, the basic currency is the taxon,
+# not the BOLD record. Hence, in this script we iterate through the taxa, not the barcodes.
+# Nevertheless, this particular query needs further refinement:
+# - We only care to do this for species where the barcodes are top 3 in quality grading,
+# - We only want to assess proper species, not provisional names or 'sp.' epithets,
+# - For BGE we only care about those species that are in the target list.
+# Meeting those requirements will involve a combination of things, such as getting the
+# gap list cleaned up and linked to the database, pre-filtering the input data on curation
+# quality, and refining the search predicates in the construct below:
 my $taxa = $orm->resultset('Taxa')->search({ level => 'species', name => { '!=' => '' } });
 $log->info("Will assess " . $taxa->count . " species");
 
@@ -36,17 +47,23 @@ $log->info("Will assess " . $taxa->count . " species");
 print join("\t", 'taxonid', 'name', 'level', 'kingdom', 'grade'), "\n"; # header
 while (my $taxon = $taxa->next) {
     my $name = $taxon->name;
+
+    # NOTE: there appears to be an off-by-one error in the PK/FK linkage. This needs
+    # extra attention, although it appears to work with the hack below.
     my $taxonid = $taxon->taxonid + 1; # ALERT ALERT ALERT TODO why is this.
     $log->info("Assessing taxon $name ($taxonid)");
 
-    # Get all records for this taxon
+    # NOTE: Get all records for this taxon. Possibly this might be the point where we 
+    # add a search predicate to filter on top 3 quality level.
     my $records = $orm->resultset('Bold')->search({ taxonid => $taxonid });
 
     # Count records
     my $record_count = $records->count;
     $log->info("Found $record_count records for taxon $name");
 
-    # Fetch distinct BINs
+    # Fetch distinct BINs *within* the record set. Hence, these are the BINs that
+    # are already associated with top 3 barcode records. No further search 
+    # predicates are needed here.
     my $bins = $records->search({}, { columns => 'bin_uri', distinct => 1 });
     my $bin_count = $bins->count;
     $log->info("Found $bin_count distinct BINs for taxon $name");
@@ -57,8 +74,10 @@ while (my $taxon = $taxa->next) {
         my $uri = $bin_uri->bin_uri;
         next URI unless $uri; # skip empty URIs
 
-        # Has a real URI, so we can assess it
+        # Has a real BIN so that we can assess it
         $log->info("Assessing bin $uri");
+
+        # NOTE: This may need additional search predicates to filter on top 3 records.
         my $bin_records = $orm->resultset('Bold')->search({ bin_uri => $uri });
         my $bin_taxa = $bin_records->search({}, { columns => 'taxonid', distinct => 1 });
         my $bin_taxon_count = $bin_taxa->count;
