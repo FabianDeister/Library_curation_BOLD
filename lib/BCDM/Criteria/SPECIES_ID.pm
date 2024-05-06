@@ -15,8 +15,13 @@ sub _criterion { $BCDM::Criteria::SPECIES_ID }
 sub _assess {
     my $package = shift;
     my $record = shift;
-    return $record->species eq '' ? 0 : 1, "Determined from species column";
-    #optional regex: return ($record->species =~ /^\s*$/) ? (0, "Determined from blank species column") : (1, "Determined from species column");
+# Check if the species field contains "sp." or is empty
+    if ($record->species =~ /^\s*$/ || $record->species eq 'sp.') {
+        return 0, "Species column is empty or contains 'sp.'";
     }
 
+# If species field is not empty and doesn't contain 'sp.', the criterion passes
+    return 1, "Determined from species column";
+}
+    
 1;
