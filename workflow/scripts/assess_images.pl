@@ -7,12 +7,13 @@ use BCDM::Criteria;
 use LWP::UserAgent;
 use Data::Dumper;
 use Getopt::Long;
+use Time::HiRes qw(usleep);
 use Log::Log4perl qw(:easy);
 
 # number of microsends to sleep before requests. Can be adjusted from outside the module via something like 500:
 # $BCDM::Criteria::HAS_IMAGE::SLEEP = 500;
 our $SLEEP = 500;
-my$flag=0;
+
 # endpoints to the CAOS object store. I wonder if the port number is fixed.
 my $base_url  = 'https://caos.boldsystems.org:31488/api/images?processids=';
 my $image_url = 'https://caos.boldsystems.org:31488/api/objects/';
@@ -41,6 +42,10 @@ END
 my $log = Log::Log4perl->get_logger('assess_criteria');
 $log->info("Going to check for images");
 
+# Instantiate user agent
+my $ua = LWP::UserAgent->new;
+$log->info("Instantiated user agent $ua");
+
 # Connect to the database. Because there is a column `order` in the BCDM, we need to
 # escape this. In SQLite that's with double quotes.
 my $io;
@@ -53,51 +58,69 @@ elsif ( $tsv_file) {
     $io = BCDM::IO->new( tsv => $tsv_file );
 }
 
-# Iterate over all BOLD records
+# Iterate over all provided records
 $io->prepare_rs;
-my @queue;
-while (my $record = $io->next) {
-	if ( scalar(@queue) == 100 ) {
-		AGAIN:
-		my $process  = join ',', map { $_->processid } @queue;
-		my $wspoint  = $base_url . $process;
-		my $uagent   = LWP::UserAgent->new;
-		# going to attempt request
-		$log->debug("Attempting $wspoint");
-		my $response = $uagent->get($wspoint);
-		$log->debug($response);
-		
-    		# inspect HTTP::Response
-		if ( $response->is_success) {
+{
+	my @queue;
+	while (my $record = $io->next) {
 
-		        # fetch content
-		        my $json = $response->decoded_content;
-			$log->debug($json);
-
-			eval {
-				my $array_ref = decode_json $json;
-				$log->debug(Dumper($array_ref));
-				for my $record ( @queue ) {
-					my $pid = $record->processid;
-					my ($match) = grep { $_->{processid} eq $pid } @$array_ref;
-					if ( $match ) {
-						print $record->recordid, "\t", $BCDM::Criteria::HAS_IMAGE, "\t", 1, "\t", $image_url . $match->{objectid}, "\n";
-					}
-					else {
-                                                print $record->recordid, "\t", $BCDM::Criteria::HAS_IMAGE, "\t", 0, "\t", ':-(', "\n";
-					}
-				}
-			};
+		# queue is full
+		if (scalar(@queue) == 100) {
+			eval { process_queue(@queue) };
 			die $@ if $@;
+
+			# flush queue, wait a bit
+			@queue = ();
+			usleep($SLEEP);
 		}
-		@queue = ();
+		else {
+
+			# add record to queue
+			push @queue, $record;
+		}
 	}
+
+	# process remaining records
+	process_queue(@queue);
+}
+
+sub process_queue {
+	my @queue = @_;
+
+	# create GET request URL, attempt to access it
+	my $process = join ',', map { $_->processid } @queue;
+	my $wspoint = $base_url . $process;
+	$log->debug("Attempting $wspoint");
+	my $response = $ua->get($wspoint);
+	$log->debug($response);
+
+	# proceed if the HTTP::Response object signals success
+	if ( $response->is_success ) {
+
+		# fetch content
+		my $json = $response->decoded_content;
+		my $array_ref = decode_json $json;
+		$log->debug(Dumper($array_ref));
+
+		# iterate over the current queue, check for each record if there is an entry in the JSON response.
+		# If so, print the record ID and the URL to the image. If not, print the record ID and a sad smiley.
+		for my $record (@queue) {
+			my $pid = $record->processid;
+			my $rid = $record->recordid;
+			my ($match) = grep {$_->{processid} eq $pid} @$array_ref;
+			my @result = ( $rid, $BCDM::Criteria::HAS_IMAGE );
+			if ($match) {
+				push @result, 1, $image_url . $match->{objectid};
+			}
+			else {
+				push @result, 0, ':-(';
+			}
+			print join( "\t", @result ), "\n";
+		}
+	}
+
+	# die if the HTTP::Response object signals failure
 	else {
-		push @queue, $record;
+		die $response->status_line;
 	}
 }
-if(defined scalar(@queue) && $flag==0)
-	{
-		$flag=1;
-		goto AGAIN;
-	}
