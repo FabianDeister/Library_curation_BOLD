@@ -22,7 +22,7 @@ WITH ScoredRecords AS (
     LEFT JOIN
         bold_criteria bc ON b.recordid = bc.recordid
     WHERE
-        b.bin_uri <> 'None'
+        b.bin_uri <> ''
     GROUP BY
         b.recordid
 )
