@@ -11,3 +11,4 @@ dependencies:
   - perl-libwww-perl
   - perl-data-dumper
   - perl-text-csv
+  - perl-lwp-protocol-https
