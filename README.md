@@ -50,18 +50,7 @@ mamba activate bold-curation
 ```
 
 ## How to run
-### Bash
-Although the aim of this project is to integrate all steps of the process
-in a simple snakemake pipeline, at present this is not implemented. Instead,
-the steps are executed individually on the command line as perl scripts
-within the conda/mamba environment. Because the current project has its own
-perl modules in the `lib` folder, every script needs to be run with the 
-additional include flag to add the module folder to the search path. Hence,
-the invocation looks like the following inside the scripts folder:
 
-```{shell}
-perl -I../../lib scriptname.pl -arg1 val1 -arg2 val2
-```
 ### snakemake
 
 Follow the installation instructions above.
@@ -76,15 +65,20 @@ snakemake -p -c {number of cores}
 If running on an HPC cluster with a SLURM scheduler you could use a bash script like this one:
 ```{shell}
 #!/bin/bash
-#SBATCH --partition=hour
+#SBATCH --partition=day
 #SBATCH --output=job_curate_bold_%j.out
 #SBATCH --error=job_curate_bold_%j.err
 #SBATCH --mem=24G
-#SBATCH --cpus-per-task=2
+#SBATCH --cpus-per-task=4
 
 source activate bold-curation
 
-snakemake -p -c 2 all
+snakemake --unlock -p -c 4 clean
+
+snakemake -p -c 4
+
+# use "clean" when running again but backup the results folder first if you want to keep it
+# I've added the unlock function to the clean because I'm tired of doing this manually when something goes wrong
 
 echo Complete!
 ```

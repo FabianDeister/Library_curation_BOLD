@@ -16,7 +16,7 @@ sub _assess {
     my $package = shift;
     my $record = shift;
 # Check if the species field contains "sp." or is empty
-    if ($record->species =~ /^\s*$/ || $record->species eq 'sp.') {
+    if ($record->species =~ /^\s*$/ || $record->species =~ /sp\./) {
         return 0, "Species column is empty or contains 'sp.'";
     }
 
