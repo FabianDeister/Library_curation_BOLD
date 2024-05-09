@@ -46,7 +46,7 @@ my $taxa = $orm->resultset('Taxa')->search({ level => 'species', name => { '!=' 
 $log->info("Will assess " . $taxa->count . " species");
 
 # Print header
-my @header = qw[ taxonid order family genus species BIN BAGS sharers ];
+my @header = qw[ taxonid order family genus species BAGS BIN sharers ];
 print join("\t", @header), "\n";
 
 # Iterate over taxa
@@ -56,13 +56,8 @@ while (my $taxon = $taxa->next) {
     my @result = ($taxon->taxonid, map( { $_->name } ofg_lineage($taxon) ), $taxon->name, $grade);
     for my $bin ( @{ $bags->bins } ) {
         print join "\t", @result, $endpoint . $bin;
-        if ( $grade eq 'E' or $grade eq 'F' ) {
-            my @sharers = map { $_->name } $bags->sharing_taxa($bin);
-            print "\t", join(',', @sharers);
-        }
-        else {
-            print "\t";
-        }
+        my @sharers = map { $_->name } $bags->taxa_sharing_bin($bin);
+        print "\t", join(',', @sharers);
         print "\n";
     }
 }
