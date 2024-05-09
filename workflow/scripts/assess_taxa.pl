@@ -2,9 +2,11 @@ use strict;
 use warnings;
 use BCDM::IO;
 use BCDM::ORM;
-use BCDM::Criteria;
+use BCDM::BAGS;
 use Getopt::Long;
 use Log::Log4perl qw(:easy);
+
+my $endpoint = 'https://boldsystems.org/index.php/Public_BarcodeCluster?clusteruri=';
 
 # Process command line arguments
 my $db_file;  # where to access database file
@@ -43,99 +45,32 @@ my $orm = BCDM::ORM->connect("dbi:SQLite:$db_file", "", "", { quote_char => '"' 
 my $taxa = $orm->resultset('Taxa')->search({ level => 'species', name => { '!=' => '' } });
 $log->info("Will assess " . $taxa->count . " species");
 
+# Print header
+my @header = qw[ taxonid order family genus species BIN BAGS sharers ];
+print join("\t", @header), "\n";
+
 # Iterate over taxa
-print join("\t", 'taxonid', 'name', 'level', 'kingdom', 'grade'), "\n"; # header
 while (my $taxon = $taxa->next) {
-    my $name = $taxon->name;
-
-    # NOTE: there appears to be an off-by-one error in the PK/FK linkage. This needs
-    # extra attention, although it appears to work with the hack below.
-    my $taxonid = $taxon->taxonid + 1; # ALERT ALERT ALERT TODO why is this.
-    $log->info("Assessing taxon $name ($taxonid)");
-
-    # NOTE: Get all records for this taxon. Possibly this might be the point where we 
-    # add a search predicate to filter on top 3 quality level.
-    my $records = $orm->resultset('Bold')->search({ taxonid => $taxonid });
-
-    # Count records
-    my $record_count = $records->count;
-    $log->info("Found $record_count records for taxon $name");
-
-    # Fetch distinct BINs *within* the record set. Hence, these are the BINs that
-    # are already associated with top 3 barcode records. No further search 
-    # predicates are needed here.
-    my $bins = $records->search({}, { columns => 'bin_uri', distinct => 1 });
-    my $bin_count = $bins->count;
-    $log->info("Found $bin_count distinct BINs for taxon $name");
-
-    # Iterate over bins, check if bin is shared among taxa
-    my $is_shared = 0;
-    URI: while(my $bin_uri = $bins->next) {
-        my $uri = $bin_uri->bin_uri;
-        next URI unless $uri; # skip empty URIs
-
-        # Has a real BIN so that we can assess it
-        $log->info("Assessing bin $uri");
-
-        # NOTE: This may need additional search predicates to filter on top 3 records.
-        my $bin_records = $orm->resultset('Bold')->search({ bin_uri => $uri });
-        my $bin_taxa = $bin_records->search({}, { columns => 'taxonid', distinct => 1 });
-        my $bin_taxon_count = $bin_taxa->count;
-        if ( $bin_taxon_count > 1 ) {
-            $log->warn("Found $bin_taxon_count taxa sharing bin $uri");
+    my $bags = BCDM::BAGS->new($taxon);
+    my $grade = $bags->grade;
+    my @result = ($taxon->taxonid, map( { $_->name } ofg_lineage($taxon) ), $taxon->name, $grade);
+    for my $bin ( @{ $bags->bins } ) {
+        print join "\t", @result, $endpoint . $bin;
+        if ( $grade eq 'E' or $grade eq 'F' ) {
+            my @sharers = map { $_->name } $bags->sharing_taxa($bin);
+            print "\t", join(',', @sharers);
         }
         else {
-            $log->info("Found $bin_taxon_count taxa sharing bin $uri");
+            print "\t";
         }
-
-        # If this is anything other than zero, there is a problem
-        $is_shared++ if $bin_taxon_count > 1;
-    }
-
-    # Now we can report the BAGS assessment.
-
-    # Grade A means: >10 specimens, in 1 unshared BIN
-    if ($record_count > 10 && $bin_count == 1 && !$is_shared) {
-        $log->info("Taxon $name is BAGS grade A");
-        prepare_output($taxon, 'A');
-    }
-
-    # Grade B means: 3-10 specimens, in 1 unshared BIN
-    elsif ( 3 <= $record_count < 10 && $bin_count == 1 && !$is_shared) {
-        $log->info("Taxon $name is BAGS grade B");
-        prepare_output($taxon, 'B')
-    }
-
-    # Grade C means more than 1 bin
-    elsif( $bin_count > 1 && !$is_shared ) {
-        $log->info("Taxon $name is BAGS grade C");
-        prepare_output($taxon, 'C');
-    }
-
-    # Grade D means <3 specimens in 1 bin
-    elsif( $record_count < 3 && $bin_count == 1 && !$is_shared ) {
-        $log->info("Taxon $name is BAGS grade D");
-        prepare_output($taxon, 'D');
-    }
-
-    # Grade E means bin sharing
-    elsif( $is_shared > 0 ) {
-        $log->info("Taxon $name is BAGS grade E");
-        prepare_output($taxon, 'E');
-    }
-
-    # This shouldn't happen
-    else {
-        $log->warn("Taxon $name does not match any of the BAGS grades");
-        prepare_output($taxon, 'WARN')
+        print "\n";
     }
 }
 
-sub prepare_output {
-    my ( $record, $grade ) = @_;
-    my $taxonid = $record->taxonid;
-    my $name    = $record->name;
-    my $level   = $record->level;
-    my $kingdom = $record->kingdom;
-    print join("\t", $taxonid, $name, $level, $kingdom, $grade), "\n";
+sub ofg_lineage {
+    my $taxon = shift;
+    my @lineage = $taxon->lineage;
+    my %keep = map { $_ => 1 } qw[ order family genus ];
+    return grep { $keep{$_->level} } reverse @lineage;
 }
+

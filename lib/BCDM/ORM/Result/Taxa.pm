@@ -150,4 +150,16 @@ __PACKAGE__->has_many(
 
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration
+
+sub lineage {
+    my $self = shift;
+    my @lineage = ($self);
+    my $parent = $self->parent_taxonid;
+    while ( $parent ) {
+        push @lineage, $parent;
+        $parent = $parent->parent_taxonid;
+    }
+    return @lineage;
+}
+
 1;
