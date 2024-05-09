@@ -492,7 +492,7 @@ rule output_filtered_data:
 .headers ON        
 .mode tabs
 .output {output}
-.read workflow/scripts/pivot.sql
+.read workflow/scripts/ranking.sql
 .quit
 EOF
         """
