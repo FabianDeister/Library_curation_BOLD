@@ -54,9 +54,10 @@ while (my $taxon = $taxa->next) {
     my $bags = BCDM::BAGS->new($taxon);
     my $grade = $bags->grade;
     my @result = ($taxon->taxonid, map( { $_->name } ofg_lineage($taxon) ), $taxon->name, $grade);
-    for my $bin ( @{ $bags->bins } ) {
+    BIN: for my $bin ( @{ $bags->bins } ) {
+	next BIN unless defined $bin and $bin =~ /^BOLD:/;
         print join "\t", @result, $endpoint . $bin;
-        my @sharers = map { $_->name } $bags->taxa_sharing_bin($bin);
+        my @sharers = $bags->taxa_sharing_bin($bin);
         print "\t", join(',', @sharers);
         print "\n";
     }
