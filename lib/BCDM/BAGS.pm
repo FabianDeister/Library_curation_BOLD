@@ -102,8 +102,10 @@ sub taxa_sharing_bin {
         $seen{$name}++;
     }
 
-    # Remove self and make dinstinct names from hash keys
-    delete $seen{$self->taxon->name};
+    # Remove self and lineage
+    delete $seen{$_->name} for $self->taxon->lineage;
+
+    # Report and return the names
     my @names = keys %seen;
     $log->info("Found " . scalar(@names) . " other taxa sharing " . $self->n_bins . " distinct BINs");
     return @names;
