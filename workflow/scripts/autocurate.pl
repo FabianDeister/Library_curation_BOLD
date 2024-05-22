@@ -68,12 +68,12 @@ my $tsv = Text::CSV->new({
 
         # Lookup BAGS rating, skip if not ABC
         my $bin = $row->{'bin_uri'};
-        next RECORD if not defined $bin or $bin !~ /^BOLD:.+$/;
+        next RECORD if not $bin or $bin !~ /^BOLD:.+$/;
         my $bags = $BAGS{$bin};
-        next RECORD if not defined $bags or $bags !~ /^[ABC]$/;
+        next RECORD if not $bags or $bags !~ /^[ABC]$/;
 
         # Lookup price rating, skip if not 123
-        next RECORD if not defined $row->{'ranking'} or $row->{'ranking'} > 3;
+        next RECORD if not $row->{'ranking'} or $row->{'ranking'} > 3;
 
         # Skip if already seen the haplotype
         my $seq = $row->{'nuc'};
