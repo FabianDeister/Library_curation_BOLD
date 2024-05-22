@@ -75,8 +75,9 @@ my $tsv = Text::CSV->new({
         # Lookup price rating, skip if not 123
         next RECORD if not $row->{'ranking'} or $row->{'ranking'} > 3;
 
-        # Skip if already seen the haplotype
+        # Skip if already seen the haplotype (sans gaps)
         my $seq = $row->{'nuc'};
+        $seq =~ s/-//g;
         next RECORD if $SEEN{$seq}++;
 
         # Print the record
