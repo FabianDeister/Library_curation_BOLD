@@ -7,9 +7,10 @@ use Getopt::Long;
 # - BAGS rating is A/B/C
 # - Price rating is 1/2/3
 
-# Cached BAGS rating and distinct sequences
+# Cached BAGS rating, distinct sequences, and taxonomic levels
 my %BAGS;
 my %SEEN;
+my @LEVELS = qw[ kingdom phylum class order family subfamily tribe genus species ];
 
 # Process command line arguments
 my $dump_tsv; # where to access annotated dump file
@@ -33,7 +34,7 @@ my $tsv = Text::CSV->new({
 });
 
 {
-    # Connect to the BAGS TSV as binary, with UTF-8
+    # Connect to the BAGS TSV as binary, with UTF-8, for reading
     open my $fh, "<:encoding(utf8)", $bags_tsv or die "Could not open file '$bags_tsv': $!";
 
     # Read the BAGS TSV as hash refs, store BIN=>BAGS mapping
@@ -51,14 +52,12 @@ my $tsv = Text::CSV->new({
 }
 
 {
-    # Connect to the BCDM TSV as binary, with UTF-8
+    # Connect to the BCDM TSV as binary, with UTF-8, for reading
     open my $fh, "<:encoding(utf8)", $dump_tsv or die "Could not open file '$dump_tsv': $!";
 
-    # Open ID map for writing
-    open my $id_fh, ">", $id_map or die "Could not open file '$id_map': $!";
-
-    # Open FASTA file for writing
-    open my $fasta_fh, ">", $fasta or die "Could not open file '$fasta': $!";
+    # Open ID map and FASTA file for writing
+    open my $id_fh,    ">", $id_map or die "Could not open file '$id_map': $!";
+    open my $fasta_fh, ">", $fasta  or die "Could not open file '$fasta': $!";
 
     # Read the BCDM dump TSV as hash refs
     my @keys = @{$tsv->getline($fh)};
@@ -68,13 +67,10 @@ my $tsv = Text::CSV->new({
         # Skip if not COI-5P
         next RECORD if not $row->{'marker_code'} or $row->{'marker_code'} ne 'COI-5P';
 
-        # Lookup BAGS rating, skip if not ABC
+        # Skip empty BINs, BAGS rating > ABC, Price rating > 3
         my $bin = $row->{'bin_uri'};
         next RECORD if not $bin or $bin !~ /^BOLD:.+$/;
-        my $bags = $BAGS{$bin};
-        next RECORD if not $bags or $bags !~ /^[ABC]$/;
-
-        # Lookup price rating, skip if not 123
+        next RECORD if not $BAGS{$bin} or $BAGS{$bin} !~ /^[ABC]$/;
         next RECORD if not $row->{'ranking'} or $row->{'ranking'} > 3;
 
         # Skip if already seen the haplotype (sans gaps)
@@ -82,10 +78,11 @@ my $tsv = Text::CSV->new({
         $seq =~ s/-//g;
         next RECORD if $SEEN{$seq}++;
 
-        # Print the record
+        # Print the record with lineage to FASTA and process ID-to-taxon ID map
         my $process_id = $row->{'processid'};
         my $taxon_id   = $row->{'taxonid'};
+        my $lineage    = join( " / ", map { $row->{$_} } @LEVELS );
         print $id_fh "$process_id\t$taxon_id\n";
-        print $fasta_fh ">$process_id\n$seq\n";
+        print $fasta_fh ">$process_id $lineage\n$seq\n";
     }
 }
