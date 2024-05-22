@@ -1,6 +1,5 @@
 use strict;
 use warnings;
-use DBI;
 use Text::CSV;
 use Getopt::Long;
 
