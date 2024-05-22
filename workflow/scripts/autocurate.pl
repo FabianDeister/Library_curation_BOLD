@@ -66,6 +66,9 @@ my $tsv = Text::CSV->new({
     $tsv->column_names(\@keys);
     RECORD: while ( my $row = $tsv->getline_hr($fh) ) {
 
+        # Skip if not COI-5P
+        next RECORD if not $row->{'marker_code'} or $row->{'marker_code'} ne 'COI-5P';
+
         # Lookup BAGS rating, skip if not ABC
         my $bin = $row->{'bin_uri'};
         next RECORD if not $bin or $bin !~ /^BOLD:.+$/;
