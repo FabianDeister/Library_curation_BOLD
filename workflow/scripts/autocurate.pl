@@ -78,6 +78,9 @@ my $tsv = Text::CSV->new({
     $tsv->column_names(\@keys);
     RECORD: while ( my $row = $tsv->getline_hr($fh) ) {
 
+        # Skip if not in the species-to-family mapping hash
+        next RECORD if not $row->{'species'} or not $SPECIES{$row->{'species'}};
+
         # Skip if not COI-5P
         next RECORD if not $row->{'marker_code'} or $row->{'marker_code'} ne 'COI-5P';
 
