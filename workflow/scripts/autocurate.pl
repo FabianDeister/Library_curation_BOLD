@@ -120,6 +120,7 @@ my $tsv = Text::CSV->new({
             my $family_fh = $HANDLE{$family};
 
             # Print the record with BAGS rating to family TSV
+            no warnings 'uninitialized';
             print $family_fh join("\t", $BAGS{$bin}, map {$row->{$_}} @keys), "\n";
         }
 
