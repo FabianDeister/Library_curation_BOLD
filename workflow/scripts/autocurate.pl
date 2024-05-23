@@ -81,7 +81,7 @@ my $tsv = Text::CSV->new({
         # Print the record with lineage to FASTA and process ID-to-taxon ID map
         my $process_id = $row->{'processid'};
         my $taxon_id   = $row->{'taxonid'};
-        my $defline    = join "|", $process_id, $row->{'species'}, map { $row->{$_} } @LEVELS;
+        my $defline    = join "|", 'private_BOLD', $process_id, $row->{'species'}, map { $row->{$_} } @LEVELS;
         print $id_fh "$process_id\t$taxon_id\n";
         print $fasta_fh ">$defline\n$seq\n";
     }
