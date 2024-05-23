@@ -71,7 +71,7 @@ SQL
     # Iterate over the species as hash refs
     SPECIES: while ( my $species = $species_sth->fetchrow_hashref() ) {
 
-        # Fetch all non-empty country ISO codes for this species
+        # Fetch all non-empty country ISO codes for this species. There are 8,799,927 out of 9,857,941 with such codes.
         my $name = $species->{'species'};
         my $iso_sql = <<'SQL';
             SELECT DISTINCT country_iso FROM bold WHERE species = ? AND country_iso <> '' AND country_iso NOT NULL;;
