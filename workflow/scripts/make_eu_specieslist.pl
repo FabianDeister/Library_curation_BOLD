@@ -43,13 +43,24 @@ while ( my $row = $tsv->getline_hr($fh) ) {
     # Expand this family
     my $family = $row->{'family'};
 
-    # Prepare the SQL statement to fetch all species in this family from the bold table, in alphabetical order
+    # Prepare the SQL statement to fetch all species in this family from the bold table, in alphabetical order:
+    # - species is not empty
+    # - species is not a placeholder
+    # - species is not a hybrid
+    # - species is not a 'confer'
+    # - species is not a 'near'
+    # - species is not an 'affine'
     my $species_sql = <<'SQL';
         SELECT DISTINCT species FROM bold
             WHERE family = ?
             AND ( identification_rank = 'species' OR identification_rank = 'subspecies' )
             AND species <> ''
-            AND species NOT LIKE '%sp.%'
+            AND species NOT LIKE '% sp.%'
+            AND species NOT LIKE '% cf. %'
+            AND species NOT LIKE '% cfr. %'
+            AND species NOT LIKE '% nr. %'
+            AND species NOT LIKE '% aff. %'
+            AND species NOT LIKE '% x %'
             AND species NOT NULL
             ORDER BY species;
 SQL
@@ -60,7 +71,7 @@ SQL
     # Iterate over the species as hash refs
     SPECIES: while ( my $species = $species_sth->fetchrow_hashref() ) {
 
-        # Fetch all country ISO codes for this species
+        # Fetch all non-empty country ISO codes for this species
         my $name = $species->{'species'};
         my $iso_sql = <<'SQL';
             SELECT DISTINCT country_iso FROM bold WHERE species = ? AND country_iso <> '' AND country_iso NOT NULL;;
