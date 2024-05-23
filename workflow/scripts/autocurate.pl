@@ -104,7 +104,7 @@ my $tsv = Text::CSV->new({
             }
 
             # Create or lookup file handle for family level TSV
-            my $family = $row->{'family'};
+            my $family = $SPECIES{$row->{'species'}};
             if ( not $HANDLE{$family} ) {
 
                 # Print header upon file creation
