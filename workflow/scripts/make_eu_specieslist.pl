@@ -50,10 +50,10 @@ while ( my $row = $tsv->getline_hr($fh) ) {
 
     # Iterate over the species as hash refs
     SPECIES: while ( my $species = $sth->fetchrow_hashref() ) {
-        warn $species;
 
         # Fetch all country ISO codes for this species
         my $name = $species->{'species'};
+        warn $name;
         $sql = "SELECT DISTINCT country_iso FROM bold WHERE species = ?";
         $sth = $dbh->prepare($sql) or die $dbh->errstr;
         $sth->execute($name) or die $dbh->errstr;
