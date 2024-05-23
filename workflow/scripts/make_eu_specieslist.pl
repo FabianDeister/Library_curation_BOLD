@@ -50,6 +50,7 @@ while ( my $row = $tsv->getline_hr($fh) ) {
 
     # Iterate over the species as hash refs
     SPECIES: while ( my $species = $sth->fetchrow_hashref() ) {
+        warn $species;
 
         # Fetch all country ISO codes for this species
         my $name = $species->{'species'};
@@ -60,6 +61,7 @@ while ( my $row = $tsv->getline_hr($fh) ) {
         # Iterate over the country ISO codes
         while ( my $country = $sth->fetchrow_hashref() ) {
             my $country_iso = $country->{'country_iso'};
+            warn $country_iso;
             if ( $ISO{$country_iso} ) {
 
                 # Print the species name
