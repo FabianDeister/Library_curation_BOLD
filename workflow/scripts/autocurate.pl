@@ -10,7 +10,7 @@ use Getopt::Long;
 # Cached BAGS rating, distinct sequences, and taxonomic levels
 my %BAGS;
 my %SEEN;
-my @LEVELS = qw[ kingdom phylum class order family subfamily tribe genus species ];
+my @LEVELS = qw[ phylum class order family genus species ];
 
 # Process command line arguments
 my $dump_tsv; # where to access annotated dump file
@@ -81,8 +81,8 @@ my $tsv = Text::CSV->new({
         # Print the record with lineage to FASTA and process ID-to-taxon ID map
         my $process_id = $row->{'processid'};
         my $taxon_id   = $row->{'taxonid'};
-        my $lineage    = join( " / ", map { $row->{$_} } @LEVELS );
+        my $defline    = join "|", $process_id, $row->{'species'}, map { $row->{$_} } @LEVELS;
         print $id_fh "$process_id\t$taxon_id\n";
-        print $fasta_fh ">$process_id $lineage\n$seq\n";
+        print $fasta_fh ">$defline\n$seq\n";
     }
 }
