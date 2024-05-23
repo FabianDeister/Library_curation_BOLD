@@ -3,25 +3,23 @@ use warnings;
 use Text::CSV;
 use Getopt::Long;
 
-# Keep distinct sequences with the following criteria:
-# - BAGS rating is A/B/C
-# - Price rating is 1/2/3
-
-# Cached BAGS rating, distinct sequences, and taxonomic levels
-my %BAGS;
-my %SEEN;
-my @LEVELS = qw[ phylum class order family genus species ];
+# Cached BAGS rating, distinct sequences, file handles and taxonomic levels
+my %BAGS;     # BIN=>BAGS mapping
+my %SEEN;     # distinct sequences
+my %HANDLE;   # file handles for families
+my %SPECIES;  # species=>family mapping
+my @LEVELS = qw[ phylum class order family genus species ]; # taxonomic levels
 
 # Process command line arguments
-my $dump_tsv; # where to access annotated dump file
+my $dump_tsv; # where to access annotated BCDM dump file
 my $bags_tsv; # location of BAGS TSV dump
-my $id_map;   # where to write process ID to taxon ID file
 my $fasta;    # where to write FASTA file
+my $species;  # european species table, like in make_eu_specieslist.pl / european_pollinator_species.tsv
 GetOptions(
-    'dump=s'  => \$dump_tsv,
-    'bags=s'  => \$bags_tsv,
-    'idmap=s' => \$id_map,
-    'fasta=s' => \$fasta,
+    'dump=s'    => \$dump_tsv,
+    'bags=s'    => \$bags_tsv,
+    'fasta=s'   => \$fasta,
+    'species=s' => \$species
 );
 
 # Initialize Text::CSV
@@ -33,6 +31,7 @@ my $tsv = Text::CSV->new({
     quote_char       => undef
 });
 
+# Create a hash table that maps BINs to BAGS ratings
 {
     # Connect to the BAGS TSV as binary, with UTF-8, for reading
     open my $fh, "<:encoding(utf8)", $bags_tsv or die "Could not open file '$bags_tsv': $!";
@@ -42,7 +41,7 @@ my $tsv = Text::CSV->new({
     $tsv->column_names(\@keys);
     while ( my $row = $tsv->getline_hr($fh) ) {
 
-        # Cache BAGS rating
+        # Cache BIN=>BAGS mapping - the BIN is the last part of the cluster URI in the TSV
         my $bin_url = $row->{'BIN'};
         if ( $bin_url =~ /clusteruri=(BOLD:.+)$/ ) {
             my $bin = $1;
@@ -51,12 +50,27 @@ my $tsv = Text::CSV->new({
     }
 }
 
+# Create a hash table that maps species to families
+{
+    # Connect to the species TSV as binary, with UTF-8, for reading
+    open my $fh, "<:encoding(utf8)", $species or die "Could not open file '$species': $!";
+
+    # Read the species TSV as hash refs, store species=>family mapping
+    my @keys = @{$tsv->getline($fh)};
+    $tsv->column_names(\@keys);
+    while ( my $row = $tsv->getline_hr($fh) ) {
+
+        # Cache species=>family mapping
+        $SPECIES{$row->{'species'}} = $row->{'family'};
+    }
+}
+
+# Triage the BCDM dump TSV, writing to FASTA if BAGS=(A,B,C) and ranking=(1,2,3), otherwise to family TSVs
 {
     # Connect to the BCDM TSV as binary, with UTF-8, for reading
     open my $fh, "<:encoding(utf8)", $dump_tsv or die "Could not open file '$dump_tsv': $!";
 
-    # Open ID map and FASTA file for writing
-    open my $id_fh,    ">", $id_map or die "Could not open file '$id_map': $!";
+    # Open FASTA file for writing
     open my $fasta_fh, ">", $fasta  or die "Could not open file '$fasta': $!";
 
     # Read the BCDM dump TSV as hash refs
@@ -67,22 +81,38 @@ my $tsv = Text::CSV->new({
         # Skip if not COI-5P
         next RECORD if not $row->{'marker_code'} or $row->{'marker_code'} ne 'COI-5P';
 
-        # Skip empty BINs, BAGS rating > ABC, Price rating > 3
-        my $bin = $row->{'bin_uri'};
-        next RECORD if not $bin or $bin !~ /^BOLD:.+$/;
-        next RECORD if not $BAGS{$bin} or $BAGS{$bin} !~ /^[ABC]$/;
-        next RECORD if not $row->{'ranking'} or $row->{'ranking'} > 3;
-
         # Skip if already seen the haplotype (sans gaps)
         my $seq = $row->{'nuc'};
         $seq =~ s/-//g;
         next RECORD if $SEEN{$seq}++;
 
-        # Print the record with lineage to FASTA and process ID-to-taxon ID map
-        my $process_id = $row->{'processid'};
-        my $taxon_id   = $row->{'taxonid'};
-        my $defline    = join "|", 'private_BOLD', $process_id, $row->{'species'}, map { $row->{$_} } @LEVELS;
-        print $id_fh "$process_id\t$taxon_id\n";
-        print $fasta_fh ">$defline\n$seq\n";
+        # Skip undefined or garbled BINs
+        my $bin = $row->{'bin_uri'};
+        next RECORD if not $bin or $bin !~ /^BOLD:.+$/;
+
+        # BAGS grading > ABC, ranking > 3? Forward to family TSV with BAGS, record, ranking for manual curation
+        if ( not $BAGS{$bin} or $BAGS{$bin} !~ /^[ABC]$/ or not $row->{'ranking'} or $row->{'ranking'} > 3 ) {
+
+            # Create or lookup file handle for family level TSV
+            my $family = $row->{'family'};
+            if ( not $HANDLE{$family} ) {
+                open my $family_fh, ">", "$family.tsv" or die "Could not open file '$family.tsv': $!";
+                $HANDLE{$family} = $family_fh;
+                print $family_fh join("\t", 'BAGS', @keys), "\n"; # Print header upon handle creation
+            }
+            my $family_fh = $HANDLE{$family};
+
+            # Print the record with BAGS rating to family TSV
+            print $family_fh join("\t", $BAGS{$bin}, map {$row->{$_}} @keys), "\n";
+        }
+
+        # Good BAGS rating
+        else {
+
+            # Print the record with lineage to FASTA
+            my $process_id = $row->{'processid'};
+            my $defline = join "|", 'private_BOLD', $process_id, $row->{'species'}, map {$row->{$_}} @LEVELS;
+            print $fasta_fh ">$defline\n$seq\n";
+        }
     }
 }
