@@ -1,5 +1,5 @@
 ![Perl CI](https://github.com/FabianDeister/Library_curation_BOLD/actions/workflows/ci.yml/badge.svg)
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.11248592.svg)](https://doi.org/10.5281/zenodo.11248592)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.11253504.svg)](https://doi.org/10.5281/zenodo.11253504)
 [![DOI](https://zenodo.org/badge/DOI/10.48546/WORKFLOWHUB.WORKFLOW.833.1.svg)](https://doi.org/10.48546/WORKFLOWHUB.WORKFLOW.833.1)
 
 # Library curation BOLD
