@@ -53,7 +53,6 @@ while ( my $row = $tsv->getline_hr($fh) ) {
 
         # Fetch all country ISO codes for this species
         my $name = $species->{'species'};
-        warn $name;
         my $iso_sql = "SELECT DISTINCT country_iso FROM bold WHERE species = ?";
         my $iso_sth = $dbh->prepare($iso_sql) or die $dbh->errstr;
         $iso_sth->execute($name) or die $dbh->errstr;
@@ -61,7 +60,6 @@ while ( my $row = $tsv->getline_hr($fh) ) {
         # Iterate over the country ISO codes
         while ( my $country = $iso_sth->fetchrow_hashref() ) {
             my $country_iso = $country->{'country_iso'};
-            warn $country_iso;
             if ( $ISO{$country_iso} ) {
 
                 # Print the species name
