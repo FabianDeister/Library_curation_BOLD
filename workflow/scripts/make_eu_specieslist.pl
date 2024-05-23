@@ -44,22 +44,22 @@ while ( my $row = $tsv->getline_hr($fh) ) {
     my $family = $row->{'family'};
 
     # Prepare the SQL statement to fetch all species in this family from the bold table, in alphabetical order
-    my $sql = "SELECT DISTINCT species FROM bold WHERE family = ? ORDER BY species";
-    my $sth = $dbh->prepare($sql) or die $dbh->errstr;
-    $sth->execute($family) or die $dbh->errstr;
+    my $species_sql = "SELECT DISTINCT species FROM bold WHERE family = ? ORDER BY species";
+    my $species_sth = $dbh->prepare($species_sql) or die $dbh->errstr;
+    $species_sth->execute($family) or die $dbh->errstr;
 
     # Iterate over the species as hash refs
-    SPECIES: while ( my $species = $sth->fetchrow_hashref() ) {
+    SPECIES: while ( my $species = $species_sth->fetchrow_hashref() ) {
 
         # Fetch all country ISO codes for this species
         my $name = $species->{'species'};
         warn $name;
-        $sql = "SELECT DISTINCT country_iso FROM bold WHERE species = ?";
-        $sth = $dbh->prepare($sql) or die $dbh->errstr;
-        $sth->execute($name) or die $dbh->errstr;
+        my $iso_sql = "SELECT DISTINCT country_iso FROM bold WHERE species = ?";
+        my $iso_sth = $dbh->prepare($iso_sql) or die $dbh->errstr;
+        $iso_sth->execute($name) or die $dbh->errstr;
 
         # Iterate over the country ISO codes
-        while ( my $country = $sth->fetchrow_hashref() ) {
+        while ( my $country = $iso_sth->fetchrow_hashref() ) {
             my $country_iso = $country->{'country_iso'};
             warn $country_iso;
             if ( $ISO{$country_iso} ) {
