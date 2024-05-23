@@ -44,7 +44,16 @@ while ( my $row = $tsv->getline_hr($fh) ) {
     my $family = $row->{'family'};
 
     # Prepare the SQL statement to fetch all species in this family from the bold table, in alphabetical order
-    my $species_sql = "SELECT DISTINCT species FROM bold WHERE family = ? ORDER BY species";
+    my $species_sql = <<'SQL';
+        SELECT DISTINCT species FROM bold
+            WHERE family = ?
+            AND ( identification_rank = 'species' OR identification_rank = 'subspecies' )
+            AND species <> ''
+            AND species NOT LIKE '%sp.%'
+            AND species NOT NULL
+            ORDER BY species;
+SQL
+
     my $species_sth = $dbh->prepare($species_sql) or die $dbh->errstr;
     $species_sth->execute($family) or die $dbh->errstr;
 
@@ -53,7 +62,10 @@ while ( my $row = $tsv->getline_hr($fh) ) {
 
         # Fetch all country ISO codes for this species
         my $name = $species->{'species'};
-        my $iso_sql = "SELECT DISTINCT country_iso FROM bold WHERE species = ?";
+        my $iso_sql = <<'SQL';
+            SELECT DISTINCT country_iso FROM bold WHERE species = ? AND country_iso <> '' AND country_iso NOT NULL;;
+SQL
+
         my $iso_sth = $dbh->prepare($iso_sql) or die $dbh->errstr;
         $iso_sth->execute($name) or die $dbh->errstr;
 
