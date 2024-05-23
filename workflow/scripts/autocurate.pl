@@ -93,12 +93,29 @@ my $tsv = Text::CSV->new({
         # BAGS grading > ABC, ranking > 3? Forward to family TSV with BAGS, record, ranking for manual curation
         if ( not $BAGS{$bin} or $BAGS{$bin} !~ /^[ABC]$/ or not $row->{'ranking'} or $row->{'ranking'} > 3 ) {
 
+            # Keep a pool of 1,000 handles. ulimit -Sn is 1024 on my system.
+            if ( scalar(keys(%HANDLE)) == 1000 ) {
+                my ($delete) = keys(%HANDLE);
+                close $HANDLE{$delete};
+                delete $HANDLE{$delete};
+            }
+
             # Create or lookup file handle for family level TSV
             my $family = $row->{'family'};
             if ( not $HANDLE{$family} ) {
-                open my $family_fh, ">", "$family.tsv" or die "Could not open file '$family.tsv': $!";
-                $HANDLE{$family} = $family_fh;
-                print $family_fh join("\t", 'BAGS', @keys), "\n"; # Print header upon handle creation
+
+                # Print header upon file creation
+                if ( not -e "$family.tsv" ) {
+                    open my $family_fh, ">", "$family.tsv" or die "Could not open file '$family.tsv': $!";
+                    print $family_fh join("\t", 'BAGS', @keys), "\n";
+                    $HANDLE{$family} = $family_fh;
+                }
+
+                # Append to existing file
+                else {
+                    open my $family_fh, ">>", "$family.tsv" or die "Could not open file '$family.tsv': $!";
+                    $HANDLE{$family} = $family_fh;
+                }
             }
             my $family_fh = $HANDLE{$family};
 
