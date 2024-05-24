@@ -4,7 +4,7 @@ use Text::CSV;
 use Getopt::Long;
 
 # Cached BAGS rating, distinct sequences, file handles and taxonomic levels
-my %BAGS;     # BIN=>BAGS mapping
+my %BAGS;     # BIN=>BAGS/sharers mapping
 my %SEEN;     # distinct sequences
 my %HANDLE;   # file handles for families
 my %SPECIES;  # species=>family mapping
@@ -31,7 +31,7 @@ my $tsv = Text::CSV->new({
     quote_char       => undef
 });
 
-# Create a hash table that maps BINs to BAGS ratings
+# Create a hash table that maps BINs to BAGS ratings and sharers
 {
     # Connect to the BAGS TSV as binary, with UTF-8, for reading
     open my $fh, "<:encoding(utf8)", $bags_tsv or die "Could not open file '$bags_tsv': $!";
@@ -41,11 +41,14 @@ my $tsv = Text::CSV->new({
     $tsv->column_names(\@keys);
     while ( my $row = $tsv->getline_hr($fh) ) {
 
-        # Cache BIN=>BAGS mapping - the BIN is the last part of the cluster URI in the TSV
+        # Cache BIN=>BAGS/sharers mapping - the BIN is the last part of the cluster URI in the TSV
         my $bin_url = $row->{'BIN'};
         if ( $bin_url =~ /clusteruri=(BOLD:.+)$/ ) {
             my $bin = $1;
-            $BAGS{$bin} = $row->{'BAGS'};
+            $BAGS{$bin} = {
+                BAGS    => $row->{'BAGS'},
+                sharers => $row->{'sharers'},
+            };
         }
     }
 }
@@ -78,7 +81,7 @@ my $tsv = Text::CSV->new({
     $tsv->column_names(\@keys);
     RECORD: while ( my $row = $tsv->getline_hr($fh) ) {
 
-        # Skip if not in the species-to-family mapping hash
+        # Skip if not having a species name or not in the species-to-family mapping hash
         next RECORD if not $row->{'species'} or not $SPECIES{$row->{'species'}};
 
         # Skip if not COI-5P
@@ -94,7 +97,7 @@ my $tsv = Text::CSV->new({
         next RECORD if not $bin or $bin !~ /^BOLD:.+$/;
 
         # BAGS grading > ABC, ranking > 3? Forward to family TSV with BAGS, record, ranking for manual curation
-        if ( not $BAGS{$bin} or $BAGS{$bin} !~ /^[ABC]$/ or not $row->{'ranking'} or $row->{'ranking'} > 3 ) {
+        if ( not $BAGS{$bin} or $BAGS{$bin}->{BAGS} !~ /^[ABC]$/ or not $row->{'ranking'} or $row->{'ranking'} > 3 ) {
 
             # Keep a pool of 1,000 handles. ulimit -Sn is 1024 on my system.
             if ( scalar(keys(%HANDLE)) == 1000 ) {
@@ -110,7 +113,7 @@ my $tsv = Text::CSV->new({
                 # Print header upon file creation
                 if ( not -e "$family.tsv" ) {
                     open my $family_fh, ">", "$family.tsv" or die "Could not open file '$family.tsv': $!";
-                    print $family_fh join("\t", 'BAGS', @keys), "\n";
+                    print $family_fh join("\t", 'BAGS', 'sharers', @keys), "\n";
                     $HANDLE{$family} = $family_fh;
                 }
 
@@ -124,7 +127,7 @@ my $tsv = Text::CSV->new({
 
             # Print the record with BAGS rating to family TSV
             no warnings 'uninitialized';
-            print $family_fh join("\t", $BAGS{$bin}, map {$row->{$_}} @keys), "\n";
+            print $family_fh join("\t", $BAGS{$bin}->{BAGS}, $BAGS{$bin}->{sharers}, map {$row->{$_}} @keys), "\n";
         }
 
         # Good BAGS rating
