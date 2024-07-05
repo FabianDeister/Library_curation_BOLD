@@ -56,7 +56,7 @@ CREATE TABLE IF NOT EXISTS "bold"(
     "geoid" TEXT,
     "country/ocean" TEXT,
     "country_iso" TEXT,
-    "province" TEXT,
+    "province/state" TEXT,
     "region" TEXT,
     "sector" TEXT,
     "site" TEXT,
