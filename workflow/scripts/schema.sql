@@ -80,6 +80,10 @@ CREATE TABLE IF NOT EXISTS "bold"(
     "sequence_run_site" TEXT,
     "sequence_upload_date" TEXT,
     "bold_recordset_code_arr" TEXT,
+    "sovereign_inst" TEXT,
+    "realm" TEXT,
+    "biome" TEXT,
+    "ecoregion" TEXT,
     FOREIGN KEY(taxonid) REFERENCES taxa(taxonid)
 );
 
