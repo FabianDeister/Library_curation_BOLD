@@ -1,6 +1,6 @@
 # Data
 
-BOLD snapshot [releases](https://v4.boldsystems.org/index.php/datapackages):
+BOLD snapshot data descriptor files [releases](https://v4.boldsystems.org/index.php/datapackages):
 - [07-Apr-2023](BOLD_Public.07-Apr-2023.datapackage.json)
 - [19-Jan-2024](BOLD_Public.19-Jan-2024.datapackage.json)
 
