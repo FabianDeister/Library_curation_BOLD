@@ -16,7 +16,7 @@ GetOptions(
 
 # Check if required args are present
 die "Input file is not defined. Use --in=FILENAME\n" unless defined $filename;
-die "Subfamily is not defined. Use --sub=SUBFAMILY\n" unless defined $subfamily;
+#die "Subfamily is not defined. Use --sub=SUBFAMILY\n" unless defined $subfamily;
 
 my@subfamily=split(",",$subfamily);
 my%subfam;
@@ -26,7 +26,7 @@ foreach(@subfamily){
 
 
 #my$filename=$ARGV[0];
-my@blacklist=("nuc","elev_accuracy","primers_forward","primers_reverse");
+my@blacklist=("SPECIES_ID","TYPE_SPECIMEN","SEQ_QUALITY","HAS_IMAGE","COLLECTORS","COLLECTION_DATE","COUNTRY","REGION","SECTOR","SITE","COORD","IDENTIFIER","ID_METHOD","INSTITUTION","PUBLIC_VOUCHER","MUSEUM_ID","nuc","elev_accuracy","primers_forward");
 my%notthisone;
 my$name;
 my%avail;
